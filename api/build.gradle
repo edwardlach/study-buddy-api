@@ -7,7 +7,11 @@ repositories {
 dependencies {
     compile (
             'com.amazonaws:aws-lambda-java-core:1.2.0',
-            'com.amazonaws:aws-lambda-java-events:2.2.6'
+            'com.amazonaws:aws-lambda-java-events:2.2.6',
+            'com.googlecode.json-simple:json-simple:1.1.1',
+            'com.fasterxml.jackson.core:jackson-core:2.9.8',
+            'com.fasterxml.jackson.core:jackson-annotations:2.9.8',
+            'com.fasterxml.jackson.core:jackson-databind:2.9.8',
     )
 }
 
@@ -19,6 +23,7 @@ task buildZip(type: Zip) {
     }
 }
 
+apply plugin: 'idea'
 apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
