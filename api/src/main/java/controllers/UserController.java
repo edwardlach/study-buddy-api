@@ -25,8 +25,7 @@ public class UserController implements AbstractController {
     public void routeRequest(RequestDTO request, AbstractDTO dto) throws SQLException, JsonProcessingException {
         switch(request.getHttpMethod()) {
             case POST:
-                createNewUser((UserDTO) dto);
-                setResponseBody(getUserByEmail((UserDTO) dto));
+                setResponseBody(createNewUser((UserDTO) dto));
                 break;
         }
     }
@@ -37,10 +36,13 @@ public class UserController implements AbstractController {
         return mapper.readValue(body, UserDTO.class);
     }
 
-    private void createNewUser(UserDTO userDTO) throws SQLException {
-        User user = new User(userDTO);
+    private UserDTO createNewUser(UserDTO userDTO) throws SQLException {
         UserService userService = new UserService();
-        userService.postUser(user);
+        userService.postUser(new User(userDTO));
+        User user = userService.getUserByEmail(userDTO.getEmail());
+        return new UserDTO(user.getCreated(), user.getUpdated(), user.isDeleted(), user.getFirstName(),
+                user.getLastName(), user.getEmail(), user.getEducationLevel(), user.getUniversityId(), user.getUserId()
+        );
     }
 
     private UserDTO getUserByEmail(UserDTO userDTO) throws SQLException {
