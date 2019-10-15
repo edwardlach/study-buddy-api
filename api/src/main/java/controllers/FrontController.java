@@ -12,6 +12,11 @@ import dtos.RequestDTO;
 import dtos.ResponseDTO;
 import dtos.UserDTO;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+import static constants.ApiRequestMappings.USERS;
+
 
 /**
  * Reference for the necessary file structure and build instructios for lambada package
@@ -25,24 +30,35 @@ import dtos.UserDTO;
  *
  * Testing Lambda function locally
  * https://www.testingexcellence.com/invoke-test-aws-lambda-function-locally-java/
+ *
+ * Useful reference for using Jackson
+ * https://www.mkyong.com/java/jackson-2-convert-java-object-to-from-json/
  */
 
 public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> {
+
+    private String routeRequestToController(RequestDTO request) {
+        String responseBody = "";
+        try {
+            switch (request.getResource()) {
+                case USERS:
+                    UserController controller = new UserController(request);
+                    responseBody = controller.getResponseBody();
+                    System.out.println(responseBody);
+                    break;
+            }
+        } catch (IOException | SQLException e) {
+            responseBody = e.getMessage();
+        }
+        return responseBody;
+    }
 
     public ResponseDTO handleRequest(RequestDTO request, Context context) {
         LambdaLogger logger = context.getLogger();
         logger.log(request.getHttpMethod());
         logger.log(request.getResource());
         logger.log(request.getBody());
-
-        String responseBody = "";
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        try {
-            responseBody = mapper.writeValueAsString(new UserDTO("Ed", "Lach", "edl5040@psu.edu"));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        String responseBody = routeRequestToController(request);
         return new ResponseDTO(200, responseBody);
     }
 

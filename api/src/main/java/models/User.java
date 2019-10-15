@@ -11,20 +11,34 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
     private int educationLevel, universityId;
+    private int userId;
 
     public User (UserDTO user) {
+        this.userId = user.getUserId();
         this.created = user.getCreated();
         this.updated = user.getUpdated();
         this.deleted = user.isDeleted();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
-        this.password = user.getPassword();
         this.educationLevel = user.getEducationLevel();
         this.universityId = user.getUniversityId();
     }
+
+    public User (LocalDateTime created, LocalDateTime updated, Boolean deleted, String firstName,
+                 String lastName, String email, int educationLevel, int universityId) {
+        this.created = created;
+        this.updated = updated;
+        this.deleted = deleted;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.educationLevel = educationLevel;
+        this.universityId = universityId;
+    }
+
+    public User() {}
 
     public LocalDateTime getCreated() {
         return created;
@@ -74,14 +88,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getEducationLevel() {
         return educationLevel;
     }
@@ -96,6 +102,14 @@ public class User {
 
     public void setUniversityId(int universityId) {
         this.universityId = universityId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
 }
