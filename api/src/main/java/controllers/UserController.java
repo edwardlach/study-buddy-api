@@ -19,6 +19,8 @@ public class UserController implements AbstractController {
     private String responseBody;
 
     public UserController(RequestDTO request) throws IOException, SQLException {
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writeValueAsString(request));
         routeRequest(request);
     }
 
@@ -30,7 +32,7 @@ public class UserController implements AbstractController {
                 setResponseBody(createNewUser((UserDTO) dto));
                 break;
             case GET:
-                setResponseBody(getUserByEmail(request.getQueryStringParameter().getEmail()));
+                setResponseBody(getUserByEmail(request.getQueryStringParameters().getEmail()));
                 break;
         }
     }

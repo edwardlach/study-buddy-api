@@ -5,7 +5,7 @@ public class RequestDTO {
     String httpMethod;
     String body;
     PathParameterDTO pathParameters;
-    QueryStringParameterDTO queryStringParameter;
+    QueryStringParametersDTO queryStringParameters;
 
     public PathParameterDTO getPathParameters() {
         return pathParameters;
@@ -15,12 +15,12 @@ public class RequestDTO {
         this.pathParameters = pathParameters;
     }
 
-    public QueryStringParameterDTO getQueryStringParameter() {
-        return queryStringParameter;
+    public QueryStringParametersDTO getQueryStringParameters() {
+        return queryStringParameters;
     }
 
-    public void setQueryStringParameter(QueryStringParameterDTO queryStringParameter) {
-        this.queryStringParameter = queryStringParameter;
+    public void setQueryStringParameters(QueryStringParametersDTO queryStringParameters) {
+        this.queryStringParameters = queryStringParameters;
     }
 
     public String getResource() {
@@ -48,12 +48,12 @@ public class RequestDTO {
     }
 
     public RequestDTO(String resource, String httpMethod, String body, PathParameterDTO pathParameters,
-                      QueryStringParameterDTO queryStringParameter) {
+                      QueryStringParametersDTO queryStringParameters) {
         this.resource = resource;
         this.httpMethod = httpMethod;
         this.body = body;
         this.pathParameters = pathParameters;
-        this.queryStringParameter = queryStringParameter;
+        this.queryStringParameters = queryStringParameters;
     }
 
     public RequestDTO() {}

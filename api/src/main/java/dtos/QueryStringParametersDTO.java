@@ -1,8 +1,9 @@
 package dtos;
 
-public class QueryStringParameterDTO {
+public class QueryStringParametersDTO {
     String email;
-    public QueryStringParameterDTO(String email) {
+
+    public QueryStringParametersDTO(String email) {
         this.email = email;
     }
 
@@ -14,7 +15,7 @@ public class QueryStringParameterDTO {
         this.email = email;
     }
 
-    public QueryStringParameterDTO(){}
+    public QueryStringParametersDTO(){}
 
 }
 

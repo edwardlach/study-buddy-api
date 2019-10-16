@@ -18,7 +18,7 @@ public class UserDTO implements AbstractDTO {
     public UserDTO (LocalDateTime created, boolean deleted, String firstName, String lastName,
                     String email, int educationLevel, int universityId) {
         this.created = created;
-        this.updated = LocalDateTime.now();;
+        this.updated = LocalDateTime.now();
         this.deleted = deleted;
         this.firstName = firstName;
         this.lastName = lastName;
