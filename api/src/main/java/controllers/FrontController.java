@@ -58,6 +58,8 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
         logger.log(request.getHttpMethod());
         logger.log(request.getResource());
         logger.log(request.getBody());
+        System.out.println(request.getPathParameters().getUserId());
+        System.out.println(request.getQueryStringParameter().getEmail());
         String responseBody = routeRequestToController(request);
         return new ResponseDTO(200, responseBody);
     }

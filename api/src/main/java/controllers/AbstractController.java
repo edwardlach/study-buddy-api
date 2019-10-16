@@ -8,6 +8,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 interface AbstractController {
-    void routeRequest(RequestDTO request, AbstractDTO dto) throws SQLException, JsonProcessingException;
+    void routeRequest(RequestDTO request) throws SQLException, IOException;
     AbstractDTO stringToDTO(String body) throws IOException;
 }

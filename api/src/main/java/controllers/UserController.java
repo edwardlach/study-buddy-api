@@ -11,6 +11,7 @@ import services.UserService;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
 
 public class UserController implements AbstractController {
@@ -18,14 +19,18 @@ public class UserController implements AbstractController {
     private String responseBody;
 
     public UserController(RequestDTO request) throws IOException, SQLException {
-        routeRequest(request, stringToDTO(request.getBody()));
+        routeRequest(request);
     }
 
     @Override
-    public void routeRequest(RequestDTO request, AbstractDTO dto) throws SQLException, JsonProcessingException {
+    public void routeRequest(RequestDTO request) throws SQLException, IOException{
         switch(request.getHttpMethod()) {
             case POST:
+                AbstractDTO dto = stringToDTO(request.getBody());
                 setResponseBody(createNewUser((UserDTO) dto));
+                break;
+            case GET:
+                setResponseBody(getUserByEmail(request.getQueryStringParameter().getEmail()));
                 break;
         }
     }
@@ -45,9 +50,9 @@ public class UserController implements AbstractController {
         );
     }
 
-    private UserDTO getUserByEmail(UserDTO userDTO) throws SQLException {
+    private UserDTO getUserByEmail(String email) throws SQLException {
         UserService userService = new UserService();
-        User user = userService.getUserByEmail(userDTO.getEmail());
+        User user = userService.getUserByEmail(email);
         return new UserDTO(user.getCreated(), user.getUpdated(), user.isDeleted(), user.getFirstName(),
                 user.getLastName(), user.getEmail(), user.getEducationLevel(), user.getUniversityId(), user.getUserId()
         );
