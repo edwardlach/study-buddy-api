@@ -1,6 +1,8 @@
 package daos;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import models.ErrorMessage;
 import models.User;
 
 import java.sql.PreparedStatement;
@@ -37,8 +39,8 @@ public class UserDAO extends DBConnect {
         return rowInserted;
     }
 
-    public User getUserByEmail(String email) throws SQLException {
-        String sql = "SELECT * from users where email = ?";
+    public User getUserByEmail(String email) throws SQLException, JsonProcessingException {
+        String sql = "SELECT * from users where email like ?";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -57,6 +59,9 @@ public class UserDAO extends DBConnect {
             user.setUniversityId(result.getInt("universityId"));
             user.setEducationLevel(result.getInt("educationLevel"));
             user.setUserId(result.getInt("userId"));
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("No user with the email address " + email + " found!");
+            throw new SQLException(ErrorMessage.getMessageAsString(errorMessage));
         }
         result.close();
         disconnect();

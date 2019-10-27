@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import daos.UserDAO;
 import models.User;
 
@@ -13,7 +14,7 @@ public class UserService {
         return userDAO.insertUser(user);
     }
 
-    public User getUserByEmail(String email) throws SQLException {
+    public User getUserByEmail(String email) throws SQLException, JsonProcessingException {
         UserDAO userDAO = new UserDAO();
         return userDAO.getUserByEmail(email);
     }

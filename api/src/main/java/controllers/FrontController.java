@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static constants.ApiRequestMappings.USERS;
+import static constants.StatusCodes.*;
 
 
 /**
@@ -37,25 +38,34 @@ import static constants.ApiRequestMappings.USERS;
 
 public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> {
 
-    private String routeRequestToController(RequestDTO request) {
+    private String routeRequestToController(RequestDTO request) throws IOException, SQLException {
         String responseBody = "";
-        try {
-            switch (request.getResource()) {
-                case USERS:
-                    UserController controller = new UserController(request);
-                    responseBody = controller.getResponseBody();
-                    System.out.println(responseBody);
-                    break;
-            }
-        } catch (IOException | SQLException e) {
-            responseBody = e.getMessage();
+        switch (request.getResource()) {
+            case USERS:
+                UserController controller = new UserController(request);
+                responseBody = controller.getResponseBody();
+                System.out.println("controller.getResponseBody() called.");
+                break;
         }
         return responseBody;
     }
 
     public ResponseDTO handleRequest(RequestDTO request, Context context) {
-        String responseBody = routeRequestToController(request);
-        return new ResponseDTO(200, responseBody);
+        String responseBody = "";
+        int statusCode;
+
+        try {
+            responseBody = routeRequestToController(request);
+            statusCode = SUCCESS;
+        } catch (SQLException e) {
+            responseBody = e.getMessage();
+            statusCode = BAD_REQUEST;
+        } catch (IOException e) {
+            responseBody = e.getMessage();
+            statusCode = INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseDTO(statusCode, responseBody);
     }
 
 }

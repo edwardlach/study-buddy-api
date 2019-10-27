@@ -21,6 +21,8 @@ public class ResponseDTO {
     }
 
     public ResponseDTO(int statusCode, String body) {
+        System.out.println(body);
+        System.out.println(statusCode);
         this.statusCode = statusCode;
         this.body = body;
     }
