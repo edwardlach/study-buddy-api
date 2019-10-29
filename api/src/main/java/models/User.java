@@ -14,20 +14,21 @@ public class User {
     private int educationLevel, universityId;
     private int userId;
 
-    public User (UserDTO user) {
-        this.userId = user.getUserId();
-        this.created = user.getCreated();
-        this.updated = user.getUpdated();
-        this.deleted = user.isDeleted();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.educationLevel = user.getEducationLevel();
-        this.universityId = user.getUniversityId();
-    }
-
     public User (LocalDateTime created, LocalDateTime updated, Boolean deleted, String firstName,
                  String lastName, String email, int educationLevel, int universityId) {
+        this.created = created;
+        this.updated = updated;
+        this.deleted = deleted;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.educationLevel = educationLevel;
+        this.universityId = universityId;
+    }
+
+    public User (int userId, LocalDateTime created, LocalDateTime updated, Boolean deleted, String firstName,
+                 String lastName, String email, int educationLevel, int universityId) {
+        this.userId = userId;
         this.created = created;
         this.updated = updated;
         this.deleted = deleted;

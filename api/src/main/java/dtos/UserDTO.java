@@ -1,5 +1,7 @@
 package dtos;
 
+import models.User;
+
 import java.time.LocalDateTime;
 
 public class UserDTO implements AbstractDTO {
@@ -14,6 +16,18 @@ public class UserDTO implements AbstractDTO {
     private int userId;
 
     public UserDTO() {}
+
+    public UserDTO(User userEntity) {
+        this.created = userEntity.getCreated();
+        this.updated = userEntity.getUpdated();
+        this.deleted = userEntity.isDeleted();
+        this.firstName = userEntity.getFirstName();
+        this.lastName = userEntity.getLastName();
+        this.email = userEntity.getEmail();
+        this.educationLevel = userEntity.getEducationLevel();
+        this.universityId = userEntity.getUniversityId();
+        this.userId = userEntity.getUserId();
+    }
 
     public UserDTO (LocalDateTime created, boolean deleted, String firstName, String lastName,
                     String email, int educationLevel, int universityId) {

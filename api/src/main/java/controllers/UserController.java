@@ -18,12 +18,12 @@ public class UserController implements AbstractController {
 
     private String responseBody;
 
-    public UserController(RequestDTO request) throws JsonProcessingException, IOException, SQLException {
+    public UserController(RequestDTO request) throws IOException, SQLException {
         routeRequest(request);
     }
 
     @Override
-    public void routeRequest(RequestDTO request) throws JsonProcessingException, SQLException, IOException{
+    public void routeRequest(RequestDTO request) throws SQLException, IOException{
         switch(request.getHttpMethod()) {
             case POST:
                 AbstractDTO dto = stringToDTO(request.getBody());
@@ -43,19 +43,25 @@ public class UserController implements AbstractController {
 
     private UserDTO createNewUser(UserDTO userDTO) throws SQLException, JsonProcessingException {
         UserService userService = new UserService();
-        userService.postUser(new User(userDTO));
+        userService.postUser(
+            new User(
+                userDTO.getCreated(),
+                userDTO.getUpdated(),
+                userDTO.isDeleted(),
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getEmail(),
+                userDTO.getEducationLevel(),
+                userDTO.getUniversityId()
+        ));
         User user = userService.getUserByEmail(userDTO.getEmail());
-        return new UserDTO(user.getCreated(), user.getUpdated(), user.isDeleted(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), user.getEducationLevel(), user.getUniversityId(), user.getUserId()
-        );
+        return new UserDTO(user);
     }
 
     private UserDTO getUserByEmail(String email) throws SQLException, JsonProcessingException {
         UserService userService = new UserService();
         User user = userService.getUserByEmail(email);
-        return new UserDTO(user.getCreated(), user.getUpdated(), user.isDeleted(), user.getFirstName(),
-                user.getLastName(), user.getEmail(), user.getEducationLevel(), user.getUniversityId(), user.getUserId()
-        );
+        return new UserDTO(user);
     }
 
     public String getResponseBody() {
