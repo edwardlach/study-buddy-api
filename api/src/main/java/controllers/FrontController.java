@@ -15,6 +15,7 @@ import dtos.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static constants.ApiRequestMappings.GROUPS;
 import static constants.ApiRequestMappings.USERS;
 import static constants.StatusCodes.*;
 
@@ -40,12 +41,22 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
 
     private String routeRequestToController(RequestDTO request) throws IOException, SQLException {
         String responseBody = "";
-        switch (request.getResource()) {
-            case USERS:
-                UserController controller = new UserController(request);
-                responseBody = controller.getResponseBody();
-                System.out.println("controller.getResponseBody() called.");
-                break;
+        try {
+            switch (request.getResource()) {
+                case USERS:
+                    UserController controller = new UserController(request);
+                    responseBody = controller.getResponseBody();
+                    System.out.println(responseBody);
+                    break;
+                case GROUPS:
+                    GroupController groupController = new GroupController(request);
+                    responseBody = groupController.getResponseBody();
+                    System.out.println(responseBody);
+                    break;
+            }
+        } catch (IOException | SQLException e) {
+            responseBody = e.getMessage();
+
         }
         return responseBody;
     }

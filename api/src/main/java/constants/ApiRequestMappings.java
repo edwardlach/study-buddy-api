@@ -8,4 +8,6 @@ public class ApiRequestMappings {
 
     public static final String USERS = "/users";
 
+    public static final String GROUPS = "/groups";
+
 }
