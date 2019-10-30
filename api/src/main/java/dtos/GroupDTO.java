@@ -1,39 +1,29 @@
 package dtos;
+import models.Group;
+
 import java.time.LocalDateTime;
 
 public class GroupDTO implements AbstractDTO{
 
-    private LocalDateTime created, updated, startDatetime;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private boolean deleted;
     private String groupName;
-    private int classId, groupId;
+    private int classId;
+    private int groupId;
 
     public GroupDTO(){}
 
-    public GroupDTO(LocalDateTime created, Boolean deleted, LocalDateTime startDatetime,
-                    String groupName, int classId){
-        this.created = created;
-        this.updated = LocalDateTime.now();
-        this.startDatetime = startDatetime;
-        this.deleted = deleted;
-        this.groupName = groupName;
-        this.classId = classId;
-    }
-
-    public GroupDTO(LocalDateTime created, LocalDateTime updated, Boolean deleted, LocalDateTime startDatetime,
-                    String groupName, int classId, int groupId){
-        this.created = created;
-        this.updated = LocalDateTime.now();
-        this.startDatetime = startDatetime;
-        this.deleted = deleted;
-        this.groupName = groupName;
-        this.classId = classId;
-        this.groupId = groupId;
-    }
-
-    public GroupDTO(String groupName, int classId){
-        this.groupName = groupName;
-        this.classId = classId;
+    public GroupDTO(Group group) {
+        this.created = group.getCreated();
+        this.updated = group.getUpdated();
+        this.startDate = group.getStartDate();
+        this.deleted = group.isDeleted();
+        this.groupName = group.getGroupName();
+        this.classId = group.getClassId();
+        this.groupId = group.getGroupId();
     }
 
     public LocalDateTime getCreated() {
@@ -52,12 +42,20 @@ public class GroupDTO implements AbstractDTO{
         this.updated = updated;
     }
 
-    public LocalDateTime getStartDatetime() {
-        return startDatetime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartDatetime(LocalDateTime startDatetime) {
-        this.startDatetime = startDatetime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public boolean isDeleted() {
@@ -91,4 +89,6 @@ public class GroupDTO implements AbstractDTO{
     public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
+
+
 }

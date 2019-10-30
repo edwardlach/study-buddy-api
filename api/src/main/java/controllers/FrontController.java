@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import dtos.RequestDTO;
 import dtos.ResponseDTO;
 import dtos.UserDTO;
+import models.ErrorMessage;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,20 +45,18 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
         try {
             switch (request.getResource()) {
                 case USERS:
-                    UserController controller = new UserController(request);
-                    responseBody = controller.getResponseBody();
-                    System.out.println(responseBody);
+                    UserController userController = new UserController(request);
+                    responseBody = userController.getResponseBody();
                     break;
                 case GROUPS:
                     GroupController groupController = new GroupController(request);
                     responseBody = groupController.getResponseBody();
-                    System.out.println(responseBody);
                     break;
             }
         } catch (IOException | SQLException e) {
             responseBody = e.getMessage();
-
         }
+
         return responseBody;
     }
 
@@ -69,10 +68,20 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
             responseBody = routeRequestToController(request);
             statusCode = SUCCESS;
         } catch (SQLException e) {
-            responseBody = e.getMessage();
+            ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+            try {
+                responseBody = ErrorMessage.getMessageAsString(errorMessage);
+            } catch (JsonProcessingException ex) {
+                ex.printStackTrace();
+            }
             statusCode = BAD_REQUEST;
         } catch (IOException e) {
-            responseBody = e.getMessage();
+            ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+            try {
+                responseBody = ErrorMessage.getMessageAsString(errorMessage);
+            } catch (JsonProcessingException ex) {
+                ex.printStackTrace();
+            }
             statusCode = INTERNAL_SERVER_ERROR;
         }
 

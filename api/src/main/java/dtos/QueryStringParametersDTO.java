@@ -2,9 +2,15 @@ package dtos;
 
 public class QueryStringParametersDTO {
     String email;
+    String searchTerm;
 
-    public QueryStringParametersDTO(String email) {
+    public QueryStringParametersDTO(){}
+
+    public QueryStringParametersDTO(
+            String email,
+            String searchTerm) {
         this.email = email;
+        this.searchTerm = searchTerm;
     }
 
     public String getEmail() {
@@ -15,7 +21,13 @@ public class QueryStringParametersDTO {
         this.email = email;
     }
 
-    public QueryStringParametersDTO(){}
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
 
 }
 

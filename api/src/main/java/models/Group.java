@@ -1,38 +1,51 @@
 package models;
 
-import dtos.GroupDTO;
-
 import java.time.LocalDateTime;
 
 public class Group{
 
-    private LocalDateTime created, updated, startDatetime;
+    private LocalDateTime created;
+    private LocalDateTime updated;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private boolean deleted;
     private String groupName;
-    private int classId, groupId;
+    private int classId;
+    private int groupId;
 
-    public Group (GroupDTO group) {
-        this.groupId = group.getGroupId();
-        this.classId = group.getClassId();
-        this.created = group.getCreated();
-        this.updated = group.getUpdated();
-        this.startDatetime = group.getStartDatetime();
-        this.deleted = group.isDeleted();
-        this.groupName = group.getGroupName();
-    }
+    public Group(){}
 
-    public Group (LocalDateTime created, LocalDateTime updated, Boolean deleted, LocalDateTime startDatetime,
-                  String groupName, int classId, int groupId) {
+    public Group (
+            LocalDateTime created,
+            LocalDateTime updated,
+            Boolean deleted,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            String groupName,
+            int classId,
+            int groupId) {
         this.created = created;
         this.updated = updated;
         this.deleted = deleted;
-        this.startDatetime = startDatetime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.groupName = groupName;
         this.classId = classId;
         this.groupId = groupId;
     }
 
-    public Group(){}
+    public Group(
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            boolean deleted,
+            String groupName,
+            int classId){
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.deleted = deleted;
+        this.groupName = groupName;
+        this.classId = classId;
+    }
 
     public LocalDateTime getCreated() {
         return created;
@@ -50,12 +63,20 @@ public class Group{
         this.updated = updated;
     }
 
-    public LocalDateTime getStartDatetime() {
-        return startDatetime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartDatetime(LocalDateTime startDatetime) {
-        this.startDatetime = startDatetime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public boolean isDeleted() {
@@ -89,4 +110,5 @@ public class Group{
     public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
+
 }

@@ -15,8 +15,6 @@ import static constants.ApiRequestMappings.POST;
 
 public class UserController extends AbstractController {
 
-    private String responseBody;
-
     public UserController(RequestDTO request) throws IOException, SQLException {
         routeRequest(request);
     }
@@ -33,12 +31,6 @@ public class UserController extends AbstractController {
                 break;
         }
     }
-
-//    @Override
-//    public AbstractDTO stringToDTO(String body) throws IOException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        return mapper.readValue(body, UserDTO.class);
-//    }
 
     private UserDTO createNewUser(UserDTO userDTO) throws SQLException, JsonProcessingException {
         UserService userService = new UserService();
@@ -62,15 +54,5 @@ public class UserController extends AbstractController {
         User user = userService.getUserByEmail(email);
         return new UserDTO(user);
     }
-
-    public String getResponseBody() {
-        return this.responseBody;
-    }
-
-    public void setResponseBody(UserDTO userDTO) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        this.responseBody = mapper.writeValueAsString(userDTO);
-    }
-
 
 }

@@ -2,14 +2,12 @@ package daos;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import models.ErrorMessage;
 import models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.ZoneId;
 
 /**
  * Example of the DAO pattern
@@ -60,8 +58,7 @@ public class UserDAO extends DBConnect {
             user.setEducationLevel(result.getInt("educationLevel"));
             user.setUserId(result.getInt("userId"));
         } else {
-            ErrorMessage errorMessage = new ErrorMessage("No user with the email address " + email + " found!");
-            throw new SQLException(ErrorMessage.getMessageAsString(errorMessage));
+            throw new SQLException("No user with the email address " + email + " found!");
         }
         result.close();
         disconnect();

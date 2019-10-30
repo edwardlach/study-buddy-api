@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.AbstractDTO;
+import dtos.GroupsDTO;
 import dtos.RequestDTO;
 import dtos.GroupDTO;
 import models.Group;
@@ -10,17 +11,16 @@ import services.GroupService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
 
 public class GroupController extends AbstractController {
 
-    private String responseBody;
+    private GroupService groupService = new GroupService();
 
-    public GroupController(RequestDTO request) throws IOException, SQLException{
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(mapper.writeValueAsString(request));
+    public GroupController(RequestDTO request) throws IOException, SQLException {
         routeRequest(request);
     }
 
@@ -32,32 +32,30 @@ public class GroupController extends AbstractController {
                 setResponseBody(createNewGroup(dto));
                 break;
             case GET:
-                // ...
+                setResponseBody(getGroupsByName(request.getQueryStringParameters().getSearchTerm()));
                 break;
         }
     }
 
     private GroupDTO createNewGroup(GroupDTO groupDTO) throws SQLException{
-        GroupService groupService = new GroupService();
-        groupService.postGroup(new Group(groupDTO));
-        Group group = groupService.getGroupByGroupName(groupDTO.getGroupName());
-        return new GroupDTO(group.getCreated(), group.getUpdated(), group.isDeleted(), group.getStartDatetime(),
-                group.getGroupName(), group.getClassId(), group.getGroupId());
+        groupService.postGroup(new Group(
+            groupDTO.getStartDate(),
+            groupDTO.getEndDate(),
+            groupDTO.isDeleted(),
+            groupDTO.getGroupName(),
+            groupDTO.getClassId()));
+        Group group = groupService.getGroupById(groupDTO.getGroupId());
+        return new GroupDTO(group);
     }
 
-    private GroupDTO getGroupByGroupName(String groupName) throws SQLException{
-        GroupService groupService = new GroupService();
-        Group group = groupService.getGroupByGroupName(groupName);
-        return new GroupDTO(group.getCreated(), group.getUpdated(), group.isDeleted(), group.getStartDatetime(),
-                group.getGroupName(), group.getClassId(), group.getGroupId());
+    private GroupsDTO getGroupsByName(String groupName) throws SQLException{
+        List<Group> groups = groupService.getGroupsByName(groupName);
+        return new GroupsDTO(groups);
     }
 
-    public String getResponseBody() {
-        return this.responseBody;
+    public GroupDTO getGroupById(int id) throws SQLException {
+        Group group = groupService.getGroupById(id);
+        return new GroupDTO(group);
     }
 
-    public void setResponseBody(GroupDTO groupDTO) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        this.responseBody = mapper.writeValueAsString(groupDTO);
-    }
 }
