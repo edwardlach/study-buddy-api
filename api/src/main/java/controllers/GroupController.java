@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
 
-public class GroupController implements AbstractController {
+public class GroupController extends AbstractController {
 
     private String responseBody;
 
@@ -28,19 +28,13 @@ public class GroupController implements AbstractController {
     public void routeRequest(RequestDTO request) throws SQLException, IOException {
         switch(request.getHttpMethod()){
             case POST:
-                AbstractDTO dto = stringToDTO(request.getBody());
-                setResponseBody(createNewGroup((GroupDTO) dto));
+                GroupDTO dto = stringToDTO(request.getBody(), GroupDTO.class);
+                setResponseBody(createNewGroup(dto));
                 break;
             case GET:
                 // ...
                 break;
         }
-    }
-
-    @Override
-    public AbstractDTO stringToDTO(String body) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(body, GroupDTO.class);
     }
 
     private GroupDTO createNewGroup(GroupDTO groupDTO) throws SQLException{

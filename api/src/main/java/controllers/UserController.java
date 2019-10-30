@@ -2,7 +2,6 @@ package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dtos.AbstractDTO;
 import dtos.RequestDTO;
 import dtos.UserDTO;
 import models.User;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
 
-public class UserController implements AbstractController {
+public class UserController extends AbstractController {
 
     private String responseBody;
 
@@ -26,8 +25,8 @@ public class UserController implements AbstractController {
     public void routeRequest(RequestDTO request) throws SQLException, IOException{
         switch(request.getHttpMethod()) {
             case POST:
-                AbstractDTO dto = stringToDTO(request.getBody());
-                setResponseBody(createNewUser((UserDTO) dto));
+                UserDTO dto = stringToDTO(request.getBody(), UserDTO.class);
+                setResponseBody(createNewUser(dto));
                 break;
             case GET:
                 setResponseBody(getUserByEmail(request.getQueryStringParameters().getEmail()));
@@ -35,11 +34,11 @@ public class UserController implements AbstractController {
         }
     }
 
-    @Override
-    public AbstractDTO stringToDTO(String body) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(body, UserDTO.class);
-    }
+//    @Override
+//    public AbstractDTO stringToDTO(String body) throws IOException {
+//        ObjectMapper mapper = new ObjectMapper();
+//        return mapper.readValue(body, UserDTO.class);
+//    }
 
     private UserDTO createNewUser(UserDTO userDTO) throws SQLException, JsonProcessingException {
         UserService userService = new UserService();
