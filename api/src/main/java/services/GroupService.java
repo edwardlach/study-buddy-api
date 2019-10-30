@@ -8,7 +8,7 @@ import java.util.List;
 
 public class GroupService {
 
-    public Boolean postGroup(Group group) throws SQLException {
+    public int postGroup(Group group) throws SQLException {
         // TODO : validation?
         GroupDAO groupDAO = new GroupDAO();
         return groupDAO.insertGroup(group);

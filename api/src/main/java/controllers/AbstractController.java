@@ -6,10 +6,12 @@ import dtos.RequestDTO;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
 abstract class AbstractController {
 
     private String responseBody;
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     abstract void routeRequest(RequestDTO request) throws SQLException, IOException;
 

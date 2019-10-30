@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 
 public class GroupDTO implements AbstractDTO{
 
-    private LocalDateTime created;
-    private LocalDateTime updated;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String created;
+    private String updated;
+    private String startDate;
+    private String endDate;
     private boolean deleted;
     private String groupName;
     private int classId;
@@ -17,44 +17,57 @@ public class GroupDTO implements AbstractDTO{
     public GroupDTO(){}
 
     public GroupDTO(Group group) {
-        this.created = group.getCreated();
-        this.updated = group.getUpdated();
-        this.startDate = group.getStartDate();
+        this.created = group.getCreated().format(formatter);
+        this.updated = group.getUpdated().format(formatter);
+        this.startDate = group.getStartDate().format(formatter);
+        this.endDate = group.getEndDate().format(formatter);
         this.deleted = group.isDeleted();
         this.groupName = group.getGroupName();
         this.classId = group.getClassId();
         this.groupId = group.getGroupId();
     }
 
-    public LocalDateTime getCreated() {
+    public GroupDTO(
+        String groupName,
+        int classId,
+        String startDate,
+        String endDate
+    ) {
+        this.groupName = groupName;
+        this.classId = classId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
+    public String getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(String updated) {
         this.updated = updated;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

@@ -11,6 +11,7 @@ import services.GroupService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
@@ -32,25 +33,26 @@ public class GroupController extends AbstractController {
                 setResponseBody(createNewGroup(dto));
                 break;
             case GET:
+                System.out.println(request.getQueryStringParameters().getSearchTerm());
                 setResponseBody(getGroupsByName(request.getQueryStringParameters().getSearchTerm()));
                 break;
         }
     }
 
     private GroupDTO createNewGroup(GroupDTO groupDTO) throws SQLException{
-        groupService.postGroup(new Group(
-            groupDTO.getStartDate(),
-            groupDTO.getEndDate(),
+        int groupId = groupService.postGroup(new Group(
+            LocalDateTime.parse(groupDTO.getStartDate(), formatter),
+            LocalDateTime.parse(groupDTO.getEndDate(), formatter),
             groupDTO.isDeleted(),
             groupDTO.getGroupName(),
             groupDTO.getClassId()));
-        Group group = groupService.getGroupById(groupDTO.getGroupId());
+        Group group = groupService.getGroupById(groupId);
         return new GroupDTO(group);
     }
 
-    private GroupsDTO getGroupsByName(String groupName) throws SQLException{
+    private List<Group> getGroupsByName(String groupName) throws SQLException{
         List<Group> groups = groupService.getGroupsByName(groupName);
-        return new GroupsDTO(groups);
+        return groups;
     }
 
     public GroupDTO getGroupById(int id) throws SQLException {

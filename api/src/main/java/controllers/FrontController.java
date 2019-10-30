@@ -54,7 +54,12 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                     break;
             }
         } catch (IOException | SQLException e) {
-            responseBody = e.getMessage();
+            ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+            try {
+                responseBody = ErrorMessage.getMessageAsString(errorMessage);
+            } catch (JsonProcessingException ex) {
+                ex.printStackTrace();
+            }
         }
 
         return responseBody;
