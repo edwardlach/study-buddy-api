@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class UserDTO implements AbstractDTO {
 
-    private LocalDateTime created, updated;
+    private String created, updated;
     private boolean deleted;
     private String firstName;
     private String lastName;
@@ -18,8 +18,8 @@ public class UserDTO implements AbstractDTO {
     public UserDTO() {}
 
     public UserDTO(User userEntity) {
-        this.created = userEntity.getCreated();
-        this.updated = userEntity.getUpdated();
+        this.created = userEntity.getCreated().format(formatter);
+        this.updated = userEntity.getUpdated().format(formatter);
         this.deleted = userEntity.isDeleted();
         this.firstName = userEntity.getFirstName();
         this.lastName = userEntity.getLastName();
@@ -29,50 +29,50 @@ public class UserDTO implements AbstractDTO {
         this.userId = userEntity.getUserId();
     }
 
-    public UserDTO (LocalDateTime created, boolean deleted, String firstName, String lastName,
-                    String email, int educationLevel, int universityId) {
-        this.created = created;
-        this.updated = LocalDateTime.now();
-        this.deleted = deleted;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.educationLevel = educationLevel;
-        this.universityId = universityId;
-    }
+//    public UserDTO (LocalDateTime created, boolean deleted, String firstName, String lastName,
+//                    String email, int educationLevel, int universityId) {
+//        this.created = created;
+//        this.updated = LocalDateTime.now();
+//        this.deleted = deleted;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.educationLevel = educationLevel;
+//        this.universityId = universityId;
+//    }
+//
+//    public UserDTO (LocalDateTime created, LocalDateTime updated, boolean deleted, String firstName,
+//                    String lastName, String email, int educationLevel, int universityId, int userId) {
+//        this.created = created;
+//        this.updated = updated;
+//        this.deleted = deleted;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.educationLevel = educationLevel;
+//        this.universityId = universityId;
+//        this.userId = userId;
+//    }
+//
+//    public UserDTO (String firstName, String lastName, String email) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//    }
 
-    public UserDTO (LocalDateTime created, LocalDateTime updated, boolean deleted, String firstName,
-                    String lastName, String email, int educationLevel, int universityId, int userId) {
-        this.created = created;
-        this.updated = updated;
-        this.deleted = deleted;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.educationLevel = educationLevel;
-        this.universityId = universityId;
-        this.userId = userId;
-    }
-
-    public UserDTO (String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    public LocalDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
+    public String getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(String updated) {
         this.updated = updated;
     }
 

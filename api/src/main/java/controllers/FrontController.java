@@ -1,23 +1,18 @@
 package controllers;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import dtos.RequestDTO;
 import dtos.ResponseDTO;
-import dtos.UserDTO;
 import models.ErrorMessage;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static constants.ApiRequestMappings.GROUPS;
-import static constants.ApiRequestMappings.USERS;
+import static constants.ApiRequestMappings.*;
 import static constants.StatusCodes.*;
 
 
@@ -51,6 +46,10 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                 case GROUPS:
                     GroupController groupController = new GroupController(request);
                     responseBody = groupController.getResponseBody();
+                    break;
+                case SUBJECTS:
+                    SubjectController subjectController = new SubjectController(request);
+                    responseBody = subjectController.getResponseBody();
                     break;
             }
         } catch (IOException | SQLException e) {

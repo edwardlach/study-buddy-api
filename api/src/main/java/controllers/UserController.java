@@ -9,6 +9,7 @@ import services.UserService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
@@ -36,8 +37,8 @@ public class UserController extends AbstractController {
         UserService userService = new UserService();
         userService.postUser(
             new User(
-                userDTO.getCreated(),
-                userDTO.getUpdated(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 userDTO.isDeleted(),
                 userDTO.getFirstName(),
                 userDTO.getLastName(),

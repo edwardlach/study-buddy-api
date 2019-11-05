@@ -12,6 +12,7 @@ import services.GroupService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
@@ -50,9 +51,13 @@ public class GroupController extends AbstractController {
         return new GroupDTO(group);
     }
 
-    private List<Group> getGroupsByName(String groupName) throws SQLException{
+    private List<GroupDTO> getGroupsByName(String groupName) throws SQLException{
         List<Group> groups = groupService.getGroupsByName(groupName);
-        return groups;
+        List<GroupDTO> dto = new ArrayList<GroupDTO>();
+        for(Group group: groups) {
+            dto.add(new GroupDTO(group));
+        }
+        return dto;
     }
 
     public GroupDTO getGroupById(int id) throws SQLException {
