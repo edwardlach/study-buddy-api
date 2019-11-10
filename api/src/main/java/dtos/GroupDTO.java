@@ -27,6 +27,12 @@ public class GroupDTO implements AbstractDTO{
         this.groupId = group.getGroupId();
     }
 
+    /*public GroupDTO(Group group, List<User> users,
+                    List<GroupMembership> groupMemberships,
+                    List<Chat> chats){
+
+    }*/
+
     public GroupDTO(
         String groupName,
         int classId,

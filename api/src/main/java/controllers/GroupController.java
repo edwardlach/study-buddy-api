@@ -59,5 +59,4 @@ public class GroupController extends AbstractController {
         Group group = groupService.getGroupById(id);
         return new GroupDTO(group);
     }
-
 }

@@ -16,8 +16,7 @@ import models.ErrorMessage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static constants.ApiRequestMappings.GROUPS;
-import static constants.ApiRequestMappings.USERS;
+import static constants.ApiRequestMappings.*;
 import static constants.StatusCodes.*;
 
 
@@ -52,6 +51,11 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                     GroupController groupController = new GroupController(request);
                     responseBody = groupController.getResponseBody();
                     break;
+                /*case GROUPMEMBERSHIPS:
+                    GroupMembershipController groupMembershipController =
+                            new GroupMembershipController(request);
+                    responseBody = groupMembershipController.getResponseBody();
+                    break;*/
             }
         } catch (IOException | SQLException e) {
             ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
