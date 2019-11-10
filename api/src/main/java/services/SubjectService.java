@@ -14,4 +14,8 @@ public class SubjectService {
         return subjectDAO.getAllClasses();
     }
 
+    public List<Subject> getClassesByName(String className) throws SQLException {
+        return subjectDAO.getClassesByName(className);
+    }
+
 }

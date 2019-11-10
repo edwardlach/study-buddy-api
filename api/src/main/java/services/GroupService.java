@@ -8,19 +8,22 @@ import java.util.List;
 
 public class GroupService {
 
+    private GroupDAO groupDAO = new GroupDAO();
+
     public int postGroup(Group group) throws SQLException {
         // TODO : validation?
-        GroupDAO groupDAO = new GroupDAO();
         return groupDAO.insertGroup(group);
     }
 
     public List<Group> getGroupsByName(String groupName) throws SQLException {
-        GroupDAO groupDAO = new GroupDAO();
         return groupDAO.getGroupsByName(groupName);
     }
 
+    public List<Group> getGroupsByClass(int classId) throws SQLException {
+        return groupDAO.getGroupsByClassId(classId);
+    }
+
     public Group getGroupById(int id) throws SQLException {
-        GroupDAO groupDAO = new GroupDAO();
         return groupDAO.getGroupById(id);
     }
 

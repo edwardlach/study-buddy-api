@@ -46,4 +46,39 @@ public class SubjectDAO extends DBConnect {
         return subjects;
     }
 
+    public List<Subject> getClassesByName(String className) throws SQLException {
+        String sql = "SELECT * from classes where name like ?";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setString(1, "%" + className + "%");
+
+        ResultSet result = statement.executeQuery();
+
+        List<Subject> subjects = new ArrayList<Subject>();
+        int count = 0;
+        while (result.next()) {
+            Subject subject = new Subject();
+            subject.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            subject.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            subject.setDeleted(result.getBoolean("deleted"));
+            subject.setName(result.getString("name"));
+            subject.setClassId(result.getInt("classId"));
+            subject.setUniversityId(result.getInt("universityId"));
+            subject.setClassNumber(result.getInt("classNumber"));
+            subject.setSubject(result.getString("subject"));
+            subjects.add(subject);
+            ++count;
+        }
+
+        if (count == 0) {
+            throw new SQLException("No classes found with a name like " + className);
+        }
+
+        result.close();
+        disconnect();
+
+        return subjects;
+    }
+
 }
