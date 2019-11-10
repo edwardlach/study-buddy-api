@@ -71,6 +71,42 @@ public class GroupDAO extends DBConnect {
         return groups;
     }
 
+    public List<Group> getGroupsByClassId(int classId) throws SQLException {
+        String sql = "SELECT * from groups where classId = ?";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setInt(1, classId);
+
+        ResultSet result = statement.executeQuery();
+
+        List<Group> groups = new ArrayList<Group>();
+        int count = 0;
+        while (result.next()) {
+            Group group = new Group();
+            group.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            group.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            group.setDeleted(result.getBoolean("deleted"));
+            group.setGroupName(result.getString("name"));
+            group.setClassId(result.getInt("classId"));
+            group.setGroupId(result.getInt("groupId"));
+            group.setStartDate(new Timestamp(result.getDate("startDate").getTime()).toLocalDateTime());
+            group.setEndDate(new Timestamp(result.getDate("endDate").getTime()).toLocalDateTime());
+            System.out.println(result.getString("name"));
+            groups.add(group);
+            ++count;
+        }
+
+        if (count == 0) {
+            throw new SQLException("No group found with that class");
+        }
+
+        result.close();
+        disconnect();
+
+        return groups;
+    }
+
     public Group getGroupById(int id) throws SQLException {
         String sql = "SELECT * from groups where groupId = ?";
         connect();

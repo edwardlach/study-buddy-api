@@ -1,16 +1,12 @@
 package controllers;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import dtos.RequestDTO;
 import dtos.ResponseDTO;
-import dtos.UserDTO;
 import models.ErrorMessage;
 
 import java.io.IOException;
@@ -51,11 +47,10 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                     GroupController groupController = new GroupController(request);
                     responseBody = groupController.getResponseBody();
                     break;
-                /*case GROUPMEMBERSHIPS:
-                    GroupMembershipController groupMembershipController =
-                            new GroupMembershipController(request);
-                    responseBody = groupMembershipController.getResponseBody();
-                    break;*/
+                case SUBJECTS:
+                    SubjectController subjectController = new SubjectController(request);
+                    responseBody = subjectController.getResponseBody();
+                    break;
             }
         } catch (IOException | SQLException e) {
             ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
