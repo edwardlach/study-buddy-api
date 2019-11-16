@@ -10,6 +10,7 @@ public class ApiRequestMappings {
     public static final String SUBJECTS = "/subjects";
     public static final String GROUPS = "/groups";
 
-    public static final String GROUPMEMBERSHIPS = "/groupMemberships";
+    public static final String GROUP_MEMBERSHIP = "/groupmembership";
+    public static final String USER_GROUP_MEMBERSHIPS = "/users/{userId}/groupmemberships";
 
 }

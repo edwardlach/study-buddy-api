@@ -66,4 +66,33 @@ public class UserDAO extends DBConnect {
         return user;
     }
 
+    public User getUserById(int userId) throws SQLException, JsonProcessingException {
+        String sql = "SELECT * from users where userId = ?";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setInt(1, userId);
+
+        ResultSet result = statement.executeQuery();
+
+        User user = new User();
+        if (result.next()) {
+            user.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            user.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            user.setDeleted(result.getBoolean("deleted"));
+            user.setEmail(result.getString("email"));
+            user.setFirstName(result.getString("firstName"));
+            user.setLastName(result.getString("lastName"));
+            user.setUniversityId(result.getInt("universityId"));
+            user.setEducationLevel(result.getInt("educationLevel"));
+            user.setUserId(result.getInt("userId"));
+        } else {
+            throw new SQLException("No user with the userId  " + userId + " found!");
+        }
+        result.close();
+        disconnect();
+
+        return user;
+    }
+
 }

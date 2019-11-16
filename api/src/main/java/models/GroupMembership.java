@@ -2,7 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 
-public class GroupMembership {
+public class GroupMembership extends GenericEntity {
 
     private LocalDateTime created;
     private LocalDateTime updated;
@@ -10,7 +10,7 @@ public class GroupMembership {
     private boolean active;
     private int userId;
     private int groupId;
-    private int groupMembershipId;
+    private int groupMembership;
 
     public GroupMembership(){}
 
@@ -20,14 +20,19 @@ public class GroupMembership {
                            boolean active,
                            int userId,
                            int groupId,
-                           int groupMembershipId){
+                           int groupMembership){
         this.created = created;
         this.updated = updated;
         this.deleted = deleted;
         this.active = active;
         this.userId = userId;
         this.groupId = groupId;
-        this.groupMembershipId = groupMembershipId;
+        this.groupMembership = groupMembership;
+    }
+
+    public GroupMembership(int groupId, int userId){
+        this.userId = userId;
+        this.groupId = groupId;
     }
 
     public LocalDateTime getCreated() {
@@ -78,11 +83,11 @@ public class GroupMembership {
         this.groupId = groupId;
     }
 
-    public int getGroupMembershipId() {
-        return groupMembershipId;
+    public int getGroupMembership() {
+        return groupMembership;
     }
 
-    public void setGroupMembershipId(int groupMembership) {
-        this.groupMembershipId = groupMembershipId;
+    public void setGroupMembership(int groupMembership) {
+        this.groupMembership = groupMembership;
     }
 }
