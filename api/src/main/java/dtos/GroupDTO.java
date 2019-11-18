@@ -1,10 +1,13 @@
 package dtos;
-import models.GenericEntity;
-import models.Group;
-import models.GroupMembership;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import models.*;
+import services.*;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
 
@@ -16,6 +19,7 @@ public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
     private String groupName;
     private int classId;
     private int groupId;
+    private SubjectDTO subject;
     private List<GroupMembershipDTO> groupMemberships;
 
     public GroupDTO(){}
@@ -68,6 +72,66 @@ public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    /** Helper Functions **/
+
+    public static GroupDTO buildGroup(GroupDTO group) throws SQLException {
+        SubjectService subjectService = new SubjectService();
+        UniversityService universityService = new UniversityService();
+        Subject subject = subjectService.getClassById(group.getClassId());
+        SubjectDTO subjectDTO = new SubjectDTO(subject);
+        University university = universityService.getUniversityById(subject.getUniversityId());
+        UniversityDTO universityDTO = new UniversityDTO(university);
+
+        List<GroupMembershipDTO> memberships = getMembershipsForGroup(group);
+        subjectDTO.setUniversity(universityDTO);
+        group.setGroupMemberships(memberships);
+        group.setSubject(subjectDTO);
+        return group;
+    }
+
+    public static GroupDTO buildGroupFromMembership(GroupMembershipDTO membership) throws SQLException {
+        GroupService groupService = new GroupService();
+        Group group = groupService.getGroupById(membership.getGroupId());
+        GroupDTO groupDTO = new GroupDTO(group);
+        return buildGroup(groupDTO);
+    }
+
+    private static List<GroupMembershipDTO> getMembershipsForGroup(GroupDTO group) {
+        GroupMembershipService groupMembershipService = new GroupMembershipService();
+        try {
+            List<GroupMembership> memberships = groupMembershipService.getGroupMembershipsByGroupId(group.getGroupId());
+            List<GroupMembershipDTO> membershipDTOs = memberships
+                    .stream()
+                    .map(membership -> new GroupMembershipDTO(membership))
+                    .collect(toList());
+
+            membershipDTOs
+                    .stream()
+                    .map(membership -> {
+                        try {
+                            membership.setUser(getUserForMembership(membership));
+                        } catch (SQLException | JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return membership;
+                    })
+                    .collect(toList());
+
+            return membershipDTOs;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    private static UserDTO getUserForMembership(GroupMembershipDTO membership) throws SQLException, JsonProcessingException {
+        UserService userService = new UserService();
+        User user = userService.getUserById(membership.getUserId());
+        return new UserDTO(user);
+    }
+
+
+    /** Setters and Getters **/
 
     public String getCreated() {
         return created;
@@ -139,6 +203,14 @@ public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
 
     public void setGroupMemberships(List<GroupMembershipDTO> groupMemberships) {
         this.groupMemberships = groupMemberships;
+    }
+
+    public SubjectDTO getSubject() {
+        return subject;
+    }
+
+    public void setSubject(SubjectDTO subject) {
+        this.subject = subject;
     }
 
 }

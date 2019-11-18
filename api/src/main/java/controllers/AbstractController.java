@@ -7,7 +7,15 @@ import dtos.RequestDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
+/*
+     Referenced this stack overflow response for the distinctByKey method:
+    https://stackoverflow.com/questions/27870136/java-lambda-stream-distinct-on-arbitrary-key
+ */
 abstract class AbstractController {
 
     private String responseBody;
@@ -27,6 +35,11 @@ abstract class AbstractController {
     public <T> void setResponseBody(T dto) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         this.responseBody = mapper.writeValueAsString(dto);
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
 }

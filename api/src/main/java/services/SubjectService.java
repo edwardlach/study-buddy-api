@@ -18,4 +18,8 @@ public class SubjectService {
         return subjectDAO.getClassesByName(className);
     }
 
+    public Subject getClassById(int classId) throws SQLException {
+        return subjectDAO.getClassById(classId);
+    }
+
 }

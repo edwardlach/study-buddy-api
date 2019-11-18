@@ -105,6 +105,7 @@ public class GroupMembershipDAO extends DBConnect {
             groupMembership.setActive(result.getBoolean("active"));
             groupMembership.setGroupId(result.getInt("groupId"));
             groupMembership.setUserId(result.getInt("userId"));
+            groupMembership.setGroupMembership(result.getInt("groupMembership"));
             groupMemberships.add(groupMembership);
             count++;
         }
@@ -138,6 +139,7 @@ public class GroupMembershipDAO extends DBConnect {
             groupMembership.setActive(result.getBoolean("active"));
             groupMembership.setGroupId(result.getInt("groupId"));
             groupMembership.setUserId(result.getInt("userId"));
+            groupMembership.setGroupMembership(result.getInt("groupMembership"));
             groupMemberships.add(groupMembership);
             count++;
         }

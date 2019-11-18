@@ -1,17 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import dtos.GroupDTO;
-import dtos.GroupMembershipDTO;
-import dtos.RequestDTO;
+import dtos.*;
 
-import dtos.UserDTO;
-import models.Group;
-import models.GroupMembership;
-import models.User;
-import services.GroupMembershipService;
-import services.GroupService;
-import services.UserService;
+import models.*;
+import services.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,6 +19,8 @@ public class GroupMembershipController extends AbstractController{
     private GroupMembershipService groupMembershipService = new GroupMembershipService();
     private GroupService groupService = new GroupService();
     private UserService userService = new UserService();
+    private SubjectService subjectService = new SubjectService();
+    private UniversityService universityService = new UniversityService();
 
     public GroupMembershipController(RequestDTO request) throws IOException, SQLException{
         routeRequest(request);
@@ -63,7 +58,7 @@ public class GroupMembershipController extends AbstractController{
                 .stream()
                 .map(membership -> {
                     try {
-                        return getGroupFromMembership(membership);
+                        return GroupDTO.buildGroupFromMembership(membership);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -71,39 +66,5 @@ public class GroupMembershipController extends AbstractController{
                 .collect(toList());
     }
 
-    private GroupDTO getGroupFromMembership(GroupMembershipDTO membership) throws SQLException {
-        Group group = groupService.getGroupById(membership.getGroupId());
-        GroupDTO groupDTO = new GroupDTO(group);
-        List<GroupMembershipDTO> memberships = getMembershipsForGroup(groupDTO);
-        groupDTO.setGroupMemberships(memberships);
-        return groupDTO;
-    }
-
-    private List<GroupMembershipDTO> getMembershipsForGroup(GroupDTO group) throws SQLException {
-        List<GroupMembership> memberships = groupMembershipService.getGroupMembershipsByGroupId(group.getGroupId());
-        List<GroupMembershipDTO> membershipDTOs = memberships
-                .stream()
-                .map(membership -> new GroupMembershipDTO(membership))
-                .collect(toList());
-
-        membershipDTOs
-                .stream()
-                .map(membership -> {
-                    try {
-                        membership.setUser(getUserForMembership(membership));
-                    } catch (SQLException | JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return membership;
-                })
-                .collect(toList());
-
-        return membershipDTOs;
-    }
-
-    private UserDTO getUserForMembership(GroupMembershipDTO membership) throws SQLException, JsonProcessingException {
-        User user = userService.getUserById(membership.getUserId());
-        return new UserDTO(user);
-    }
 }
 

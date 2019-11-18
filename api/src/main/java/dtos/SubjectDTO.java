@@ -1,6 +1,7 @@
 package dtos;
 
 import models.Subject;
+import models.University;
 
 public class SubjectDTO implements AbstractDTO<Subject, SubjectDTO> {
 
@@ -12,6 +13,7 @@ public class SubjectDTO implements AbstractDTO<Subject, SubjectDTO> {
     private int universityId;
     private int classNumber;
     private String subject;
+    private UniversityDTO university;
 
     public SubjectDTO(){}
 
@@ -102,6 +104,14 @@ public class SubjectDTO implements AbstractDTO<Subject, SubjectDTO> {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public UniversityDTO getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(UniversityDTO university) {
+        this.university = university;
     }
 
 }
