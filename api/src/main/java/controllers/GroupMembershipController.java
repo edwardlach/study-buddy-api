@@ -1,4 +1,4 @@
-/*package controllers;
+package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,31 +32,33 @@ public class GroupMembershipController extends AbstractController{
                 setResponseBody(createNewGroupMembership(dto));
                 break;
             case GET:
-                System.out.println(request.getPathStringParameters().getSearchTerm());
-                setResponseBody(getGroupMembershipsByGroupId(request.getQueryStringParameters().getSearchTerm()));
+                System.out.println(request.getQueryStringParameters().getSearchTerm());
+                //setResponseBody(getGroupMembershipsByGroupId(request.getQueryStringParameters().getSearchTerm()));
                 break;
         }
     }
 
     private GroupMembershipDTO createNewGroupMembership(GroupMembershipDTO groupMembershipDTO) throws SQLException{
-        int groupMembership = groupMembershipService.postGroupMembership(new GroupMembership(
+        int membership = groupMembershipService.postGroupMembership(new GroupMembership(
                 LocalDateTime.parse(groupMembershipDTO.getCreated(), formatter),
                 LocalDateTime.parse(groupMembershipDTO.getUpdated(), formatter),
                 groupMembershipDTO.isDeleted(),
                 groupMembershipDTO.isActive(),
+                groupMembershipDTO.getUserId(),
+                groupMembershipDTO.getGroupId(),
                 groupMembershipDTO.getGroupMembership()));
-        GroupMembership groupMembership = groupMembershipService.getGroupMembershipsByGroupId(int groupId);
+        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByGroupId(membership);
         return new GroupMembershipDTO(groupMembership);
     }
 
-    private List<GroupMembership> getGroupMembershipsByGroupId(int groupId) throws SQLException{
-        List<GroupMembership> groupMembership = groupMembershipService.getGroupMembershipsByGroupId(groupId);
-        return groupMembership;
+    private GroupMembershipDTO getGroupMembershipsByGroupId(int groupId) throws SQLException{
+        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByGroupId(groupId);
+        return new GroupMembershipDTO(groupMembership);
     }
 
-    private List<GroupMembership> getGroupMembershipsByUserId(int userId) throws SQLException {
-        List<GroupMembership> groupMembership = groupMembershipService.getGroupMembershipsByUserId(UserId);
-        return groupMembership;
+    private GroupMembershipDTO getGroupMembershipsByUserId(int userId) throws SQLException {
+        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByUserId(userId);
+        return new GroupMembershipDTO(groupMembership);
     }
-}*/
+}
 

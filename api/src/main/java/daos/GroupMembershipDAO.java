@@ -16,7 +16,7 @@ public class GroupMembershipDAO extends DBConnect {
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        statement.setInt(1, groupMembership.getGroupMembershipId());
+        statement.setInt(1, groupMembership.getGroupMembership());
         statement.setTimestamp(2, Timestamp.valueOf(groupMembership.getCreated()));
         statement.setTimestamp(3, Timestamp.valueOf(groupMembership.getUpdated()));
 
