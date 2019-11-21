@@ -38,6 +38,7 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
     private String routeRequestToController(RequestDTO request) throws IOException, SQLException {
         String responseBody = "";
         try {
+            System.out.println(request.getResource());
             switch (request.getResource()) {
                 case USERS:
                     UserController userController = new UserController(request);
@@ -50,6 +51,11 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                 case SUBJECTS:
                     SubjectController subjectController = new SubjectController(request);
                     responseBody = subjectController.getResponseBody();
+                    break;
+                case GROUP_MEMBERSHIP:
+                case USER_GROUP_MEMBERSHIPS:
+                    GroupMembershipController groupMembershipController = new GroupMembershipController(request);
+                    responseBody = groupMembershipController.getResponseBody();
                     break;
             }
         } catch (IOException | SQLException e) {

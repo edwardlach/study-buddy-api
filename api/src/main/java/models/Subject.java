@@ -2,7 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 
-public class Subject {
+public class Subject extends GenericEntity {
 
     private int classId;
     private LocalDateTime created;

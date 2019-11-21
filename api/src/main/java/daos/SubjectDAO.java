@@ -81,4 +81,37 @@ public class SubjectDAO extends DBConnect {
         return subjects;
     }
 
+    public Subject getClassById(int classId) throws SQLException {
+        String sql = "SELECT * from classes where classId = ?";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setInt(1, classId);
+
+        ResultSet result = statement.executeQuery();
+
+        Subject subject = new Subject();
+        int count = 0;
+        while (result.next()) {
+            subject.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            subject.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            subject.setDeleted(result.getBoolean("deleted"));
+            subject.setName(result.getString("name"));
+            subject.setClassId(result.getInt("classId"));
+            subject.setUniversityId(result.getInt("universityId"));
+            subject.setClassNumber(result.getInt("classNumber"));
+            subject.setSubject(result.getString("subject"));
+            ++count;
+        }
+
+        if (count == 0) {
+            throw new SQLException("No classes found with the id " + classId);
+        }
+
+        result.close();
+        disconnect();
+
+        return subject;
+    }
+
 }

@@ -2,7 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 
-public class Group{
+public class Group extends GenericEntity {
 
     private LocalDateTime created;
     private LocalDateTime updated;

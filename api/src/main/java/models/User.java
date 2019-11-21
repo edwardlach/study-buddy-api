@@ -4,7 +4,7 @@ import dtos.UserDTO;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class User extends GenericEntity {
 
     private LocalDateTime created, updated;
     private boolean deleted;

@@ -4,7 +4,7 @@ import models.User;
 
 import java.time.LocalDateTime;
 
-public class UserDTO implements AbstractDTO {
+public class UserDTO implements AbstractDTO<User, UserDTO> {
 
     private String created, updated;
     private boolean deleted;
@@ -29,36 +29,20 @@ public class UserDTO implements AbstractDTO {
         this.userId = userEntity.getUserId();
     }
 
-//    public UserDTO (LocalDateTime created, boolean deleted, String firstName, String lastName,
-//                    String email, int educationLevel, int universityId) {
-//        this.created = created;
-//        this.updated = LocalDateTime.now();
-//        this.deleted = deleted;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.educationLevel = educationLevel;
-//        this.universityId = universityId;
-//    }
-//
-//    public UserDTO (LocalDateTime created, LocalDateTime updated, boolean deleted, String firstName,
-//                    String lastName, String email, int educationLevel, int universityId, int userId) {
-//        this.created = created;
-//        this.updated = updated;
-//        this.deleted = deleted;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.educationLevel = educationLevel;
-//        this.universityId = universityId;
-//        this.userId = userId;
-//    }
-//
-//    public UserDTO (String firstName, String lastName, String email) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//    }
+    @Override
+    public UserDTO apply(User userEntity) {
+        UserDTO uDTO = new UserDTO();
+        uDTO.created = userEntity.getCreated().format(formatter);
+        uDTO.updated = userEntity.getUpdated().format(formatter);
+        uDTO.deleted = userEntity.isDeleted();
+        uDTO.firstName = userEntity.getFirstName();
+        uDTO.lastName = userEntity.getLastName();
+        uDTO.email = userEntity.getEmail();
+        uDTO.educationLevel = userEntity.getEducationLevel();
+        uDTO.universityId = userEntity.getUniversityId();
+        uDTO.userId = userEntity.getUserId();
+        return uDTO;
+    }
 
     public String getCreated() {
         return created;

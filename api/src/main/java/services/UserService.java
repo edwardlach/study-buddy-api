@@ -8,15 +8,19 @@ import java.sql.SQLException;
 
 public class UserService {
 
+    private UserDAO userDAO = new UserDAO();
+
     public Boolean postUser(User user) throws SQLException {
         // TODO - enforce valid email format before posting
-        UserDAO userDAO = new UserDAO();
         return userDAO.insertUser(user);
     }
 
     public User getUserByEmail(String email) throws SQLException, JsonProcessingException {
-        UserDAO userDAO = new UserDAO();
         return userDAO.getUserByEmail(email);
+    }
+
+    public User getUserById(int userId) throws SQLException, JsonProcessingException {
+        return userDAO.getUserById(userId);
     }
 
 }

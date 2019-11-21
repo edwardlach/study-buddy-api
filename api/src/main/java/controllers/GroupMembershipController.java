@@ -1,25 +1,26 @@
 package controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dtos.AbstractDTO;
-import dtos.GroupMembershipDTO;
-import dtos.RequestDTO;
+import dtos.*;
 
-import models.GroupMembership;
-import services.GroupMembershipService;
+import models.*;
+import services.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
+import static java.util.stream.Collectors.toList;
 
 public class GroupMembershipController extends AbstractController{
 
     private GroupMembershipService groupMembershipService = new GroupMembershipService();
+    private GroupService groupService = new GroupService();
+    private UserService userService = new UserService();
+    private SubjectService subjectService = new SubjectService();
+    private UniversityService universityService = new UniversityService();
 
     public GroupMembershipController(RequestDTO request) throws IOException, SQLException{
         routeRequest(request);
@@ -32,33 +33,38 @@ public class GroupMembershipController extends AbstractController{
                 setResponseBody(createNewGroupMembership(dto));
                 break;
             case GET:
-                System.out.println(request.getQueryStringParameters().getSearchTerm());
-                //setResponseBody(getGroupMembershipsByGroupId(request.getQueryStringParameters().getSearchTerm()));
+                setResponseBody(getGroupMembershipsForUser(Integer.parseInt(request.getPathParameters().getUserId())));
                 break;
         }
     }
 
     private GroupMembershipDTO createNewGroupMembership(GroupMembershipDTO groupMembershipDTO) throws SQLException{
-        int membership = groupMembershipService.postGroupMembership(new GroupMembership(
-                LocalDateTime.parse(groupMembershipDTO.getCreated(), formatter),
-                LocalDateTime.parse(groupMembershipDTO.getUpdated(), formatter),
-                groupMembershipDTO.isDeleted(),
-                groupMembershipDTO.isActive(),
-                groupMembershipDTO.getUserId(),
-                groupMembershipDTO.getGroupId(),
-                groupMembershipDTO.getGroupMembership()));
-        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByGroupId(membership);
-        return new GroupMembershipDTO(groupMembership);
+        int groupMembership = groupMembershipService.postGroupMembership(
+                new GroupMembership(
+                        groupMembershipDTO.getGroupId(),
+                        groupMembershipDTO.getUserId()));
+        GroupMembership newGroupMembership = groupMembershipService.getGroupMembershipById(groupMembership);
+        return new GroupMembershipDTO(newGroupMembership);
     }
 
-    private GroupMembershipDTO getGroupMembershipsByGroupId(int groupId) throws SQLException{
-        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByGroupId(groupId);
-        return new GroupMembershipDTO(groupMembership);
+    private List<GroupDTO> getGroupMembershipsForUser(int userId) throws SQLException {
+        List<GroupMembership> groupMemberships = groupMembershipService.getGroupMembershipsByUserId(userId);
+        List<GroupMembershipDTO> membershipDTOs = groupMemberships
+                .stream()
+                .map(membership -> new GroupMembershipDTO(membership))
+                .collect(toList());
+
+        return membershipDTOs
+                .stream()
+                .map(membership -> {
+                    try {
+                        return GroupDTO.buildGroupFromMembership(membership);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(toList());
     }
 
-    private GroupMembershipDTO getGroupMembershipsByUserId(int userId) throws SQLException {
-        GroupMembership groupMembership = groupMembershipService.getGroupMembershipByUserId(userId);
-        return new GroupMembershipDTO(groupMembership);
-    }
 }
 

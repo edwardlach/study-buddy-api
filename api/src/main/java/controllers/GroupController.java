@@ -1,9 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dtos.AbstractDTO;
-import dtos.GroupsDTO;
 import dtos.RequestDTO;
 import dtos.GroupDTO;
 import models.Group;
@@ -16,6 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
@@ -82,7 +79,16 @@ public class GroupController extends AbstractController {
             throw new SQLException(errorMessage);
         }
 
-        return dto;
+        return dto.stream()
+                .filter(distinctByKey(GroupDTO::getGroupId))
+                .map(group -> {
+                    try {
+                        return GroupDTO.buildGroup(group);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public GroupDTO getGroupById(int id) throws SQLException {

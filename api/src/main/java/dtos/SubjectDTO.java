@@ -1,8 +1,9 @@
 package dtos;
 
 import models.Subject;
+import models.University;
 
-public class SubjectDTO implements AbstractDTO {
+public class SubjectDTO implements AbstractDTO<Subject, SubjectDTO> {
 
     private int classId;
     private String created;
@@ -12,6 +13,7 @@ public class SubjectDTO implements AbstractDTO {
     private int universityId;
     private int classNumber;
     private String subject;
+    private UniversityDTO university;
 
     public SubjectDTO(){}
 
@@ -24,6 +26,20 @@ public class SubjectDTO implements AbstractDTO {
         this.universityId = subjectEntity.getUniversityId();
         this.classNumber = subjectEntity.getClassNumber();
         this.subject = subjectEntity.getSubject();
+    }
+
+    @Override
+    public SubjectDTO apply(Subject subjectEntity) {
+        SubjectDTO sDTO = new SubjectDTO();
+        sDTO.classId = subjectEntity.getClassId();
+        sDTO.created = subjectEntity.getCreated().format(formatter);
+        sDTO.updated = subjectEntity.getUpdated().format(formatter);
+        sDTO.deleted = subjectEntity.isDeleted();
+        sDTO.name = subjectEntity.getName();
+        sDTO.universityId = subjectEntity.getUniversityId();
+        sDTO.classNumber = subjectEntity.getClassNumber();
+        sDTO.subject = subjectEntity.getSubject();
+        return sDTO;
     }
 
     public int getClassId() {
@@ -88,6 +104,14 @@ public class SubjectDTO implements AbstractDTO {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public UniversityDTO getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(UniversityDTO university) {
+        this.university = university;
     }
 
 }
