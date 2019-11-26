@@ -57,7 +57,7 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                     GroupMembershipController groupMembershipController = new GroupMembershipController(request);
                     responseBody = groupMembershipController.getResponseBody();
                     break;
-                case CHATMESSAGE:
+                case CHAT_MESSAGE:
                     ChatMessageController chatMessageController = new ChatMessageController(request);
                     responseBody = chatMessageController.getResponseBody();
             }

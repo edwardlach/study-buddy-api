@@ -1,6 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import dtos.*;
 
 import models.*;
@@ -13,12 +12,9 @@ import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
-import static java.util.stream.Collectors.toList;
 
 public class ChatMessageController extends AbstractController{
     private ChatMessageService chatMessageService = new ChatMessageService();
-    private GroupService groupService = new GroupService();
-    private UserService userService = new UserService();
 
     public ChatMessageController(RequestDTO request) throws IOException, SQLException{
         routeRequest(request);
@@ -31,7 +27,7 @@ public class ChatMessageController extends AbstractController{
                 setResponseBody(createNewChatMessage(dto));
                 break;
             case GET:
-                setResponseBody(getChatMessagesForUser(Integer.parseInt(request.getPathParameters().getUserId())));
+                setResponseBody(getChatMessagesForGroup(Integer.parseInt(request.getPathParameters().getGroupId())));
                 break;
         }
     }
@@ -45,18 +41,12 @@ public class ChatMessageController extends AbstractController{
         return new ChatMessageDTO(newChatMessage);
     }
 
-    private List<ChatMessageDTO> getChatMessagesForUser(int groupId) throws SQLException{
-        String errorMessage = "";
-        List<ChatMessageDTO> dto = new ArrayList<ChatMessageDTO>();
-        try {
-            List<ChatMessage> messages = chatMessageService.getChatMessagesByGroupId(groupId);
-            for (ChatMessage cm : messages) {
-                dto.add(new ChatMessageDTO(cm));
-            }
-        } catch (SQLException e){
-            errorMessage = e.getMessage();
+    private List<ChatMessageDTO> getChatMessagesForGroup(int groupId) throws SQLException{
+        List<ChatMessageDTO> dto = new ArrayList<>();
+        List<ChatMessage> messages = chatMessageService.getChatMessagesByGroupId(groupId);
+        for (ChatMessage cm : messages) {
+            dto.add(new ChatMessageDTO(cm));
         }
-
         return dto;
     }
 }

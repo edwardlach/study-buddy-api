@@ -11,7 +11,6 @@ import utils.PayloadBuilder;
 import utils.Resource;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class UserControllerIT {
 
@@ -30,4 +29,7 @@ public class UserControllerIT {
         assertTrue(user.getUserId() > 0);
     }
 
+    @Test
+    public void thatAUserCanBeRetrievedWithAnEmailAddress()  {
+    }
 }
