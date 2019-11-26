@@ -77,6 +77,7 @@ public class ChatMessageDAO extends DBConnect {
             chatMessage.setFlagged(result.getBoolean("flagged"));
             chatMessage.setGroupId(result.getInt("groupId"));
             chatMessage.setMessage(result.getString("message"));
+            chatMessage.setMessageId(result.getInt("messageId"));
             chatMessages.add(chatMessage);
             count++;
         }
@@ -109,6 +110,7 @@ public class ChatMessageDAO extends DBConnect {
             chatMessage.setFlagged(result.getBoolean("flagged"));
             chatMessage.setGroupId(result.getInt("groupId"));
             chatMessage.setMessage(result.getString("message"));
+            chatMessage.setMessageId(result.getInt("messageId"));
             chatMessages.add(chatMessage);
             count++;
         }

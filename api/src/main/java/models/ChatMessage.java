@@ -34,10 +34,10 @@ public class ChatMessage extends GenericEntity{
         this.groupId = groupId;
     }
 
-    public ChatMessage(int userId, int groupId){
+    public ChatMessage(int userId, int groupId, String message){
         this.userId = userId;
         this.groupId = groupId;
-
+        this.message = message;
     }
 
     public ChatMessage(){}

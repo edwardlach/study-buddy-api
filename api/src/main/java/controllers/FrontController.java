@@ -58,8 +58,10 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
                     responseBody = groupMembershipController.getResponseBody();
                     break;
                 case CHAT_MESSAGE:
+                case GROUP_CHAT_MESSAGES:
                     ChatMessageController chatMessageController = new ChatMessageController(request);
                     responseBody = chatMessageController.getResponseBody();
+                    break;
             }
         } catch (IOException | SQLException e) {
             ErrorMessage errorMessage = new ErrorMessage(e.getMessage());

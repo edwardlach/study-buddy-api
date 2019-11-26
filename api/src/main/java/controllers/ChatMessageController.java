@@ -36,7 +36,8 @@ public class ChatMessageController extends AbstractController{
         int chatMessage = chatMessageService.postChatMessage(
                 new ChatMessage(
                         chatMessageDTO.getUserId(),
-                        chatMessageDTO.getGroupId()));
+                        chatMessageDTO.getGroupId(),
+                        chatMessageDTO.getMessage()));
         ChatMessage newChatMessage = chatMessageService.getChatMessageById(chatMessage);
         return new ChatMessageDTO(newChatMessage);
     }

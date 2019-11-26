@@ -14,5 +14,6 @@ public class ApiRequestMappings {
     public static final String USER_GROUP_MEMBERSHIPS = "/users/{userId}/groupmemberships";
 
     public static final String CHAT_MESSAGE = "/messages";
+    public static final String GROUP_CHAT_MESSAGES = "/groups/{groupId}/messages";
 
 }
