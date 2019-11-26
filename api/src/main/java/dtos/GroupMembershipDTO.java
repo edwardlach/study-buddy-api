@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
+
 public class GroupMembershipDTO implements AbstractDTO<GroupMembership, GroupMembershipDTO> {
     private String created;
     private String updated;

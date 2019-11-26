@@ -38,7 +38,7 @@ public class GroupMembershipController extends AbstractController{
         }
     }
 
-    private GroupMembershipDTO createNewGroupMembership(GroupMembershipDTO groupMembershipDTO) throws SQLException {
+    private GroupMembershipDTO createNewGroupMembership(GroupMembershipDTO groupMembershipDTO) throws SQLException{
         int groupMembership = groupMembershipService.postGroupMembership(
                 new GroupMembership(
                         groupMembershipDTO.getGroupId(),

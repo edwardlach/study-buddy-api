@@ -28,6 +28,7 @@ public class GroupMembership extends GenericEntity {
         this.userId = userId;
         this.groupId = groupId;
         this.groupMembership = groupMembership;
+
     }
 
     public GroupMembership(int groupId, int userId){
