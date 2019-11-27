@@ -7,6 +7,7 @@ import dtos.UserDTO;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import utils.AWS;
+import utils.LambdaMock;
 import utils.PayloadBuilder;
 import utils.Resource;
 import java.util.Map;
@@ -18,12 +19,10 @@ public class UserControllerIT {
     @Test
     public void thatANewUserIsSuccessfullyCreated() throws IOException {
         PayloadBuilder payload = new PayloadBuilder(Resource.GET_USER);
-        InvokeResult result = AWS.invoke("FrontController", payload.toString());
-        String rawJson = new String(result.getPayload().array(), "UTF-8");
         ObjectMapper mapper = new ObjectMapper();
-        ResponseDTO response = mapper.readValue(rawJson, ResponseDTO.class);
+        ResponseDTO response = LambdaMock.invoke(payload);
         UserDTO user = mapper.readValue(response.getBody(), UserDTO.class);
-        assertEquals(200, (int)result.getStatusCode());
+        assertEquals(200, (int)response.getStatusCode());
         assertEquals("edl5040@psu.edu", user.getEmail());
         assertTrue(user.getUserId() > 0);
     }

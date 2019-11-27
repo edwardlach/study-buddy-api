@@ -116,73 +116,12 @@ public class PayloadBuilder {
 
     public String toString() {
         return "{"+
-                "\"resource\": \"" + getResource() + "\"," +
-                "\"path\": \"" + getPath() + "\"," +
-                "\"httpMethod\": \"" + getMethod() + "\"," +
-                "\"headers\": {" +
-                    "\"content-type\": \"application/json\"," +
-                    "\"Host\": \"4b7jtysje3.execute-api.us-east-1.amazonaws.com\"," +
-                    "\"X-Amzn-Trace-Id\": \"Root=1-5ddaa6a6-95e88235218551815d5c84bf\"," +
-                    "\"X-Forwarded-For\": \"173.75.23.67\"," +
-                    "\"X-Forwarded-Port\": \"443\"," +
-                    "\"X-Forwarded-Proto\": \"https\"" +
-                "}," +
-                "\"multiValueHeaders\": {" +
-                    "\"content-type\": [" +
-                        "\"application/json\"" +
-                    "]," +
-                    "\"Host\": [" +
-                        "\"4b7jtysje3.execute-api.us-east-1.amazonaws.com\"" +
-                    "]," +
-                    "\"X-Amzn-Trace-Id\": [" +
-                        "\"Root=1-5ddaa6a6-95e88235218551815d5c84bf\"" +
-                    "]," +
-                    "\"X-Forwarded-For\": [" +
-                        "\"173.75.23.67\"" +
-                    "]," +
-                    "\"X-Forwarded-Port\": [" +
-                       "\"443\"" +
-                     "]," +
-                    "\"X-Forwarded-Proto\": [" +
-                        "\"https\"" +
-                    "]" +
-                "}," +
-                "\"queryStringParameters\": " + getQueryStringParameters() + "," +
-                "\"multiValueQueryStringParameters\": " + getPathParameters() + "," +
-                "\"pathParameters\": " + getPathParameters() + "," +
-                "\"stageVariables\": null, " +
-                "\"requestContext\": {" +
-                    "\"resourceId\": \"iab5et\"," +
-                    "\"resourcePath\": \"" + getResource() + "\"," +
-                    "\"httpMethod\": \"" + getMethod() + "\"," +
-                    "\"extendedRequestId\": \"Dq76BGNgIAMFyjQ=\"," +
-                    "\"requestTime\": \"24/Nov/2019:15:49:58 +0000\"," +
+                    "\"resource\": \"" + getResource() + "\"," +
                     "\"path\": \"" + getPath() + "\"," +
-                    "\"accountId\": \"001952273251\"," +
-                    "\"protocol\": \"HTTP/1.1\"," +
-                    "\"stage\": \"develop\"," +
-                    "\"domainPrefix\": \"4b7jtysje3\"," +
-                    "\"requestTimeEpoch\": 1574610598423," +
-                    "\"requestId\": \"03718b9b-2b9f-4736-80c2-2cad66fd30b8\"," +
-                    "\"identity\": {" +
-                        "\"cognitoIdentityPoolId\": null," +
-                        "\"accountId\": null," +
-                        "\"cognitoIdentityId\": null," +
-                        "\"caller\": null," +
-                        "\"sourceIp\": \"173.75.23.67\"," +
-                        "\"principalOrgId\": null," +
-                        "\"accessKey\": null," +
-                        "\"cognitoAuthenticationType\": null," +
-                        "\"cognitoAuthenticationProvider\": null," +
-                        "\"userArn\": null," +
-                        "\"userAgent\": null," +
-                        "\"user\": null" +
-                    "}," +
-                    "\"domainName\": \"4b7jtysje3.execute-api.us-east-1.amazonaws.com\"," +
-                    "\"apiId\": \"4b7jtysje3\"" +
-                    "}," +
-                "\"body\": " + getBody() + "," +
-                    "\"isBase64Encoded\": false" +
+                    "\"httpMethod\": \"" + getMethod() + "\"," +
+                    "\"queryStringParameters\": " + getQueryStringParameters() + "," +
+                    "\"pathParameters\": " + getPathParameters() + "," +
+                    "\"body\": " + getBody() +
                 "}";
     }
 }
