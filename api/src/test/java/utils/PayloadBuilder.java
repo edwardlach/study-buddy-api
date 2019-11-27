@@ -87,7 +87,7 @@ public class PayloadBuilder {
         if (this.body == null) {
             return "";
         } else {
-            return "\"" + bodyToString(body) + "\"";
+            return "\"" + mappedValuesToString(body, true) + "\"";
         }
     }
 
@@ -100,7 +100,7 @@ public class PayloadBuilder {
     }
 
     public String getQueryStringParameters() {
-        return mappedValuesToString(this.queryStringParameters);
+        return mappedValuesToString(this.queryStringParameters, false);
     }
 
     public void setPathParameters(String key, String value) {
@@ -108,10 +108,10 @@ public class PayloadBuilder {
     }
 
     public String getPathParameters() {
-        return mappedValuesToString(this.pathParameters);
+        return mappedValuesToString(this.pathParameters, false);
     }
 
-    public String mappedValuesToString(Map<String, String> values) {
+    public String mappedValuesToString(Map<String, String> values, Boolean escape) {
         String parameterString = "{";
         if(!values.isEmpty()) {
             int parameterSize = values.size();
@@ -119,7 +119,11 @@ public class PayloadBuilder {
             for (Map.Entry<String, String> entry : values.entrySet()) {
                 String key = entry.getKey();
                 Object val = entry.getValue();
-                parameterString += "\"" + key + "\":\"" + val + "\"";
+                if (escape) {
+                    parameterString += "\\\"" + key + "\\\":\\\"" + val + "\\\"";
+                } else {
+                    parameterString += "\"" + key + "\":\"" + val + "\"";
+                }
                 parametersParsed += 1;
                 if (parametersParsed < parameterSize) {
                     parameterString += ",";
@@ -141,22 +145,4 @@ public class PayloadBuilder {
                 "}";
     }
 
-    public String bodyToString(Map<String, String> body){
-        String parameterString = "{";
-        if(!body.isEmpty()) {
-            int parameterSize = body.size();
-            int parametersParsed = 0;
-            for (Map.Entry<String, String> entry : body.entrySet()) {
-                String key = entry.getKey();
-                Object val = entry.getValue();
-                parameterString += "\\\"" + key + "\\\":\\\"" + val + "\\\"";
-                parametersParsed += 1;
-                if (parametersParsed < parameterSize) {
-                    parameterString += ",";
-                }
-            }
-        }
-        parameterString += "}";
-        return parameterString;
-    }
 }
