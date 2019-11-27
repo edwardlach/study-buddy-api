@@ -9,7 +9,7 @@ public class PayloadBuilder {
     private String resource;
     private String path;
     private String method;
-    private String body;
+    private Map<String,String> body = new HashMap<>();
     private Map<String, String> queryStringParameters = new HashMap<String, String>();
     private Map<String, String> pathParameters = new HashMap<String, String>();
 
@@ -22,6 +22,10 @@ public class PayloadBuilder {
         buildGenericPayload(resource);
     }
 
+    public PayloadBuilder(Resource resource, String email){
+        buildGenericPayload(resource, email);
+    }
+
     private void buildGenericPayload(Resource resource) {
         switch (resource) {
             case GET_USER:
@@ -30,6 +34,18 @@ public class PayloadBuilder {
                 setMethod("GET");
                 setQueryStringParameters("email", "edl5040@psu.edu");
                 break;
+        }
+    }
+
+    private void buildGenericPayload(Resource resource, String email){
+        switch (resource) {
+            case POST_USER:
+                setResource("/users");
+                setPath("/users");
+                setMethod("POST");
+                setBody("firstName","Ickis");
+                setBody("lastName","Rossi");
+                setBody("email",email);
         }
     }
 
@@ -69,14 +85,14 @@ public class PayloadBuilder {
 
     public String getBody() {
         if (this.body == null) {
-            return body;
+            return "";
         } else {
-            return "\"" + body + "\"";
+            return "\"" + bodyToString(body) + "\"";
         }
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setBody(String key, String value) {
+        this.body.put(key, value);
     }
 
     public void setQueryStringParameters(String key, String value) {
@@ -123,5 +139,24 @@ public class PayloadBuilder {
                     "\"pathParameters\": " + getPathParameters() + "," +
                     "\"body\": " + getBody() +
                 "}";
+    }
+
+    public String bodyToString(Map<String, String> body){
+        String parameterString = "{";
+        if(!body.isEmpty()) {
+            int parameterSize = body.size();
+            int parametersParsed = 0;
+            for (Map.Entry<String, String> entry : body.entrySet()) {
+                String key = entry.getKey();
+                Object val = entry.getValue();
+                parameterString += "\\\"" + key + "\\\":\\\"" + val + "\\\"";
+                parametersParsed += 1;
+                if (parametersParsed < parameterSize) {
+                    parameterString += ",";
+                }
+            }
+        }
+        parameterString += "}";
+        return parameterString;
     }
 }
