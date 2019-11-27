@@ -22,7 +22,7 @@ public class UserControllerIT {
         ObjectMapper mapper = new ObjectMapper();
         ResponseDTO response = LambdaMock.invoke(payload);
         UserDTO user = mapper.readValue(response.getBody(), UserDTO.class);
-        assertEquals(200, (int)response.getStatusCode());
+        assertEquals(200, response.getStatusCode());
         assertEquals("edl5040@psu.edu", user.getEmail());
         assertTrue(user.getUserId() > 0);
     }
