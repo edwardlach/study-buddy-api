@@ -7,6 +7,7 @@ public class RequestDTO {
     String path;
     PathParameterDTO pathParameters;
     QueryStringParametersDTO queryStringParameters;
+    RequestContextDTO requestContext;
 
     public PathParameterDTO getPathParameters() {
         return pathParameters;
@@ -56,14 +57,23 @@ public class RequestDTO {
         this.path = path;
     }
 
+    public RequestContextDTO getRequestContext() {
+        return requestContext;
+    }
+
+    public void setRequestContext(RequestContextDTO requestContext) {
+        this.requestContext = requestContext;
+    }
+
     public RequestDTO(String resource, String httpMethod, String body, String path,
-                      PathParameterDTO pathParameters,
+                      PathParameterDTO pathParameters, RequestContextDTO requestContext,
                       QueryStringParametersDTO queryStringParameters) {
         this.resource = resource;
         this.httpMethod = httpMethod;
         this.body = body;
         this.path = path;
         this.pathParameters = pathParameters;
+        this.requestContext = requestContext;
         this.queryStringParameters = queryStringParameters;
     }
 

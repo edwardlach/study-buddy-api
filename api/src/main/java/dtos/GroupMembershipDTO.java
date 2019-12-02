@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 
 
-public class GroupMembershipDTO implements AbstractDTO<GroupMembership, GroupMembershipDTO> {
+public class GroupMembershipDTO extends AbstractDTO {
     private String created;
     private String updated;
     private boolean deleted;
@@ -40,19 +40,6 @@ public class GroupMembershipDTO implements AbstractDTO<GroupMembership, GroupMem
         this.groupId = groupMembership.getGroupId();
         this.groupMembership = groupMembership.getGroupMembership();
         this.user = new UserDTO(user);
-    }
-
-    @Override
-    public GroupMembershipDTO apply(GroupMembership groupMembership) {
-        GroupMembershipDTO gmDTO = new GroupMembershipDTO();
-        gmDTO.created = groupMembership.getCreated().format(formatter);
-        gmDTO.updated = groupMembership.getUpdated().format(formatter);
-        gmDTO.deleted = groupMembership.isDeleted();
-        gmDTO.active = groupMembership.isActive();
-        gmDTO.userId = groupMembership.getUserId();
-        gmDTO.groupId = groupMembership.getGroupId();
-        gmDTO.groupMembership = groupMembership.getGroupMembership();
-        return gmDTO;
     }
 
     public String getCreated() {

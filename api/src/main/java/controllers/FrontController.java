@@ -38,30 +38,34 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
     private String routeRequestToController(RequestDTO request) throws IOException, SQLException {
         String responseBody = "";
         try {
-            System.out.println(request.getResource());
-            switch (request.getResource()) {
-                case USERS:
-                    UserController userController = new UserController(request);
-                    responseBody = userController.getResponseBody();
-                    break;
-                case GROUPS:
-                    GroupController groupController = new GroupController(request);
-                    responseBody = groupController.getResponseBody();
-                    break;
-                case SUBJECTS:
-                    SubjectController subjectController = new SubjectController(request);
-                    responseBody = subjectController.getResponseBody();
-                    break;
-                case GROUP_MEMBERSHIP:
-                case USER_GROUP_MEMBERSHIPS:
-                    GroupMembershipController groupMembershipController = new GroupMembershipController(request);
-                    responseBody = groupMembershipController.getResponseBody();
-                    break;
-                case CHAT_MESSAGE:
-                case GROUP_CHAT_MESSAGES:
-                    ChatMessageController chatMessageController = new ChatMessageController(request);
-                    responseBody = chatMessageController.getResponseBody();
-                    break;
+            if(request.getResource() != null) {
+                switch (request.getResource()) {
+                    case USERS:
+                        UserController userController = new UserController(request);
+                        responseBody = userController.getResponseBody();
+                        break;
+                    case GROUPS:
+                        GroupController groupController = new GroupController(request);
+                        responseBody = groupController.getResponseBody();
+                        break;
+                    case SUBJECTS:
+                        SubjectController subjectController = new SubjectController(request);
+                        responseBody = subjectController.getResponseBody();
+                        break;
+                    case GROUP_MEMBERSHIP:
+                    case USER_GROUP_MEMBERSHIPS:
+                        GroupMembershipController groupMembershipController = new GroupMembershipController(request);
+                        responseBody = groupMembershipController.getResponseBody();
+                        break;
+                    case CHAT_MESSAGE:
+                    case GROUP_CHAT_MESSAGES:
+                        ChatMessageController chatMessageController = new ChatMessageController(request);
+                        responseBody = chatMessageController.getResponseBody();
+                        break;
+                }
+            } else {
+                WebSocketController webSocketController = new WebSocketController(request);
+                responseBody = webSocketController.getResponseBody();
             }
         } catch (IOException | SQLException e) {
             ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
@@ -78,7 +82,6 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
     public ResponseDTO handleRequest(RequestDTO request, Context context) {
         String responseBody = "";
         int statusCode;
-
         try {
             responseBody = routeRequestToController(request);
             statusCode = SUCCESS;

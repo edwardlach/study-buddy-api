@@ -1,14 +1,11 @@
 package dtos;
 
-import models.GenericEntity;
 import models.ChatMessage;
 import models.User;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.function.Function;
 
-public class ChatMessageDTO implements AbstractDTO<ChatMessage, ChatMessageDTO> {
-    private String created, updated, message;
+
+public class ChatMessageDTO extends AbstractDTO {
+    private String created, updated, message, action;
     private boolean deleted, flagged;
     private int userId, groupId, messageId;
     private UserDTO user;
@@ -36,20 +33,6 @@ public class ChatMessageDTO implements AbstractDTO<ChatMessage, ChatMessageDTO> 
         this.messageId = chatMessage.getMessageId();
         this.message = chatMessage.getMessage();
         this.user = new UserDTO(user);
-    }
-
-    @Override
-    public ChatMessageDTO apply(ChatMessage chatMessage){
-        ChatMessageDTO cmDTO = new ChatMessageDTO();
-        cmDTO.created = chatMessage.getCreated().format(formatter);
-        cmDTO.updated = chatMessage.getUpdated().format(formatter);
-        cmDTO.deleted = chatMessage.isDeleted();
-        cmDTO.flagged = chatMessage.isFlagged();
-        cmDTO.userId = chatMessage.getUserId();
-        cmDTO.groupId = chatMessage.getGroupId();
-        cmDTO.messageId = chatMessage.getMessageId();
-        cmDTO.message = chatMessage.getMessage();
-        return cmDTO;
     }
 
     public String getCreated() {
@@ -115,4 +98,21 @@ public class ChatMessageDTO implements AbstractDTO<ChatMessage, ChatMessageDTO> 
     public void setMessageId(int messageId) {
         this.messageId = messageId;
     }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
 }

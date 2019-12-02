@@ -4,7 +4,7 @@ import models.User;
 
 import java.time.LocalDateTime;
 
-public class UserDTO implements AbstractDTO<User, UserDTO> {
+public class UserDTO extends AbstractDTO {
 
     private String created, updated;
     private boolean deleted;
@@ -27,21 +27,6 @@ public class UserDTO implements AbstractDTO<User, UserDTO> {
         this.educationLevel = userEntity.getEducationLevel();
         this.universityId = userEntity.getUniversityId();
         this.userId = userEntity.getUserId();
-    }
-
-    @Override
-    public UserDTO apply(User userEntity) {
-        UserDTO uDTO = new UserDTO();
-        uDTO.created = userEntity.getCreated().format(formatter);
-        uDTO.updated = userEntity.getUpdated().format(formatter);
-        uDTO.deleted = userEntity.isDeleted();
-        uDTO.firstName = userEntity.getFirstName();
-        uDTO.lastName = userEntity.getLastName();
-        uDTO.email = userEntity.getEmail();
-        uDTO.educationLevel = userEntity.getEducationLevel();
-        uDTO.universityId = userEntity.getUniversityId();
-        uDTO.userId = userEntity.getUserId();
-        return uDTO;
     }
 
     public String getCreated() {

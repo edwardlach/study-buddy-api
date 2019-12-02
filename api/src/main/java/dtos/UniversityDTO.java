@@ -2,7 +2,7 @@ package dtos;
 
 import models.University;
 
-public class UniversityDTO implements AbstractDTO<University, UniversityDTO> {
+public class UniversityDTO extends AbstractDTO {
 
     private int universityId;
     private String name;
@@ -40,8 +40,4 @@ public class UniversityDTO implements AbstractDTO<University, UniversityDTO> {
         this.location = location;
     }
 
-    @Override
-    public UniversityDTO apply(University university) {
-        return null;
-    }
 }

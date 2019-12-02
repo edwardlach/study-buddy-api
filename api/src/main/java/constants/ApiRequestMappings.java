@@ -16,4 +16,8 @@ public class ApiRequestMappings {
     public static final String CHAT_MESSAGE = "/messages";
     public static final String GROUP_CHAT_MESSAGES = "/groups/{groupId}/messages";
 
+    public static final String CONNECT = "$connect";
+    public static final String DISCONNECT = "$disconnect";
+    public static final String SEND_MESSAGE = "sendmessage";
+
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
+public class GroupDTO extends AbstractDTO {
 
     private String created;
     private String updated;
@@ -33,32 +33,6 @@ public class GroupDTO implements AbstractDTO<Group, GroupDTO> {
         this.groupName = group.getGroupName();
         this.classId = group.getClassId();
         this.groupId = group.getGroupId();
-    }
-
-    public GroupDTO(Group group, List<GroupMembership> groupMemberships) {
-        this.created = group.getCreated().format(formatter);
-        this.updated = group.getUpdated().format(formatter);
-        this.startDate = group.getStartDate().format(formatter);
-        this.endDate = group.getEndDate().format(formatter);
-        this.deleted = group.isDeleted();
-        this.groupName = group.getGroupName();
-        this.classId = group.getClassId();
-        this.groupId = group.getGroupId();
-        this.groupMemberships = new GroupMembershipDTO().convertToDTO(groupMemberships);
-    }
-
-    @Override
-    public GroupDTO apply(Group group) {
-        GroupDTO gDTO = new GroupDTO();
-        gDTO.created = group.getCreated().format(formatter);
-        gDTO.updated = group.getUpdated().format(formatter);
-        gDTO.startDate = group.getStartDate().format(formatter);
-        gDTO.endDate = group.getEndDate().format(formatter);
-        gDTO.deleted = group.isDeleted();
-        gDTO.groupName = group.getGroupName();
-        gDTO.classId = group.getClassId();
-        gDTO.groupId = group.getGroupId();
-        return gDTO;
     }
 
     public GroupDTO(
