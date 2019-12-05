@@ -32,12 +32,14 @@ public class WebSocketController extends AbstractController {
     @Override
     void routeRequest(RequestDTO request) throws SQLException, IOException {
         RequestContextDTO requestContext = request.getRequestContext();
-        WebSocketDTO webSocket = new WebSocketDTO(requestContext, request.getHeaders());
+        WebSocketDTO webSocket;
         switch(request.getRequestContext().getRouteKey()) {
             case CONNECT:
+                webSocket = new WebSocketDTO(requestContext, request.getHeaders());
                 setResponseBody(saveWebSocketConnection(webSocket));
                 break;
             case DISCONNECT:
+                webSocket = new WebSocketDTO(requestContext);
                 setResponseBody(deleteWebSocketConnection(webSocket));
                 break;
             case SEND_MESSAGE:

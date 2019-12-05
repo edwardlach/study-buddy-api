@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.ChatMessageDTO;
 import dtos.ResponseDTO;
 import dtos.WebSocketDTO;
+import org.glassfish.tyrus.client.ClientManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.LambdaMock;
 import utils.PayloadBuilder;
 import utils.RandomGen;
 
+import javax.websocket.Session;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class WebSocketControllerIT {
     private static ObjectMapper mapper;
     private static String connectionId;
     private static String message;
+    private static String server;
     private static Map<String, String> body = new HashMap<>();
     private static Map<String, String> headers = new HashMap<>();
 
@@ -31,6 +34,7 @@ public class WebSocketControllerIT {
     public static void setUp() {
         mapper = new ObjectMapper();
         connectionId = RandomGen.getRandomConnectionId();
+        server = "wss://j1g49nfi28.execute-api.us-east-1.amazonaws.com/dev";
         message = RandomGen.getRandomMessage();
         body.put("action", "sendmessage");
         body.put("message", message);
@@ -79,6 +83,12 @@ public class WebSocketControllerIT {
         assertEquals(200, response.getStatusCode());
         assertEquals(connectionId, webSocket.getConnectionId());
         assertTrue(webSocket.isDeleted());
+    }
+
+    @Test
+    public void thatConnectedClientsAreNotifiedWhenANewMessageIsReceived() {
+//        ClientManager client = ClientManager.createClient();
+//        Session session = client.connectToServer();
     }
 
 }

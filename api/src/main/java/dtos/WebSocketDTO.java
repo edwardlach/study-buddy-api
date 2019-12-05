@@ -39,6 +39,13 @@ public class WebSocketDTO extends AbstractDTO {
         this.groupId = headers.getGroupId();
     }
 
+    public WebSocketDTO(
+            RequestContextDTO requestContext)
+    {
+        this.requestContext = requestContext;
+        this.connectionId = requestContext.getConnectionId();
+    }
+
     public WebSocketDTO(WebSocketConnection connection) {
         this.connectionId = connection.getConnectionId();
         this.created = connection.getCreated().format(formatter);
