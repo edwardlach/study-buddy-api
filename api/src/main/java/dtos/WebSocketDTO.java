@@ -1,5 +1,7 @@
 package dtos;
 
+import models.WebSocketConnection;
+
 import java.time.LocalDateTime;
 
 public class WebSocketDTO extends AbstractDTO {
@@ -27,9 +29,23 @@ public class WebSocketDTO extends AbstractDTO {
         this.groupId = groupId;
     }
 
-    public WebSocketDTO(RequestContextDTO requestContext) {
+    public WebSocketDTO(
+            RequestContextDTO requestContext,
+            WebSocketHeadersDTO headers)
+    {
         this.requestContext = requestContext;
         this.connectionId = requestContext.getConnectionId();
+        this.userId = headers.getUserId();
+        this.groupId = headers.getGroupId();
+    }
+
+    public WebSocketDTO(WebSocketConnection connection) {
+        this.connectionId = connection.getConnectionId();
+        this.created = connection.getCreated().format(formatter);
+        this.updated = connection.getUpdated().format(formatter);
+        this.deleted = connection.isDeleted();
+        this.userId = connection.getUserId();
+        this.groupId = connection.getGroupId();
     }
 
     public WebSocketDTO() {}

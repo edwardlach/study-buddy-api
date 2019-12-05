@@ -1,42 +1,84 @@
 package controllers;
 
-import org.apache.http.entity.StringEntity;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dtos.ChatMessageDTO;
+import dtos.ResponseDTO;
+import dtos.WebSocketDTO;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import utils.LambdaMock;
+import utils.PayloadBuilder;
+import utils.RandomGen;
 
-import utils.AwsRequest;
-import utils.Hmac;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WebSocketControllerIT {
 
-    @Test
-    public void thatThePayloadIsHashedCorrectly() throws UnsupportedEncodingException, NoSuchAlgorithmException {
-//        String payload = "{\"action\":\"sendmessage\", \"message\":\"Hello World!\"}";
-//        String escapedPayload = "\"{\\\"action\\\":\\\"sendmessage\\\", \\\"message\\\":\\\"Hello World!\\\"}\"";
-//        String escaped = AwsRequest.escapePayload(payload);
-//        String hashedPayload = Hmac.getSha256Hash(payload);
-//        assertEquals(escapedPayload, escaped);
-//        assertEquals("188d10c66bff6dfd0f6c5132c22d2cf7e054bd7bc23e1dbecb47e138c470a366", hashedPayload);
+    private static ObjectMapper mapper;
+    private static String connectionId;
+    private static String message;
+    private static Map<String, String> body = new HashMap<>();
+    private static Map<String, String> headers = new HashMap<>();
+
+    @BeforeClass
+    public static void setUp() {
+        mapper = new ObjectMapper();
+        connectionId = RandomGen.getRandomConnectionId();
+        message = RandomGen.getRandomMessage();
+        body.put("action", "sendmessage");
+        body.put("message", message);
+        body.put("userId", "40");
+        body.put("groupId", "24");
+        headers.put("userId", "40");
+        headers.put("groupId", "24");
     }
 
     @Test
-    public void thatTheCanonicalRequestIsHashedCorrectly() throws UnsupportedEncodingException, NoSuchAlgorithmException {
-//        String canonicalRequest =
-//                "POST\n" + "\n" +
-//                "/dev/%40connections/EAnTydnAoAMCL1A%3D\n"+
-//                "content-type:application/json\n" +
-//                "host:j1g49nfi28.execute-api.us-east-1.amazonaws.com\n" +
-//                "x-amz-date:20191201T054125Z\n" +
-//                "content-type;host;x-amz-date\n" +
-//                "188d10c66bff6dfd0f6c5132c22d2cf7e054bd7bc23e1dbecb47e138c470a366";
-//        System.out.println(canonicalRequest);
-//        String hashedRequest = Hmac.getSha256Hash(canonicalRequest);
-//        assertEquals("ad696766e08e8ab0a26c8242853a29fb10034def8fff581e26a0cb7799120bdc", hashedRequest);
+    public void thatAWebSocketConnectionIsSaved() throws IOException {
+        PayloadBuilder payload = new PayloadBuilder(
+            connectionId,
+            "$connect",
+            Optional.empty(),
+            Optional.of(headers));
+        ResponseDTO response = LambdaMock.invoke(payload);
+        WebSocketDTO webSocket = mapper.readValue(response.getBody(), WebSocketDTO.class);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(connectionId, webSocket.getConnectionId());
+        assertTrue(!webSocket.isDeleted());
     }
 
+    @Test
+    public void thatAWebSocketCreatesANewMessage() throws IOException {
+        PayloadBuilder payload = new PayloadBuilder(
+            connectionId,
+            "sendmessage",
+            Optional.of(body),
+            Optional.empty());
+        ResponseDTO response = LambdaMock.invoke(payload);
+        ChatMessageDTO chatMessage = mapper.readValue(response.getBody(), ChatMessageDTO.class);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(message, chatMessage.getMessage());
+    }
 
+    @Test
+    public void thatAWebSocketConnectionIsDeleted() throws IOException {
+        PayloadBuilder payload = new PayloadBuilder(
+                connectionId,
+                "$disconnect",
+                Optional.empty(),
+                Optional.empty());
+        ResponseDTO response = LambdaMock.invoke(payload);
+        WebSocketDTO webSocket = mapper.readValue(response.getBody(), WebSocketDTO.class);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(connectionId, webSocket.getConnectionId());
+        assertTrue(webSocket.isDeleted());
+    }
 
 }

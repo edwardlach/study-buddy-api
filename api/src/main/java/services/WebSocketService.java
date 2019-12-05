@@ -4,17 +4,24 @@ import daos.WebSocketDAO;
 import models.WebSocketConnection;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class WebSocketService {
 
     private WebSocketDAO websocketDAO = new WebSocketDAO();
 
-    public String saveWebsocketConnection(WebSocketConnection websocket) throws SQLException {
-        return websocketDAO.insertWebsocketConnection(websocket);
+    public WebSocketConnection saveWebsocketConnection(WebSocketConnection websocket) throws SQLException {
+        String connectionId = websocketDAO.insertWebsocketConnection(websocket);
+        return websocketDAO.getWebSocketConnectionById(connectionId);
     }
 
-    public String deleteWebsocketConnection(WebSocketConnection websocket) throws SQLException {
-        return websocketDAO.deleteWebsocketConnection(websocket);
+    public WebSocketConnection deleteWebsocketConnection(WebSocketConnection websocket) throws SQLException {
+        String connectionId = websocketDAO.deleteWebsocketConnection(websocket);
+        return websocketDAO.getWebSocketConnectionById(connectionId);
+    }
+
+    public List<WebSocketConnection> getOpenGroupWebSocketConnections(int groupId) throws SQLException {
+        return websocketDAO.getOpenWebSocketConnectionsByGroupId(groupId);
     }
 
 }

@@ -3,20 +3,19 @@ package utils;
 import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class PayloadBuilder {
     private String payload;
     private String resource;
     private String path;
     private String method;
-    private Map<String,String> body = new HashMap<>();
+    private Map<String, String> requestContext = new HashMap<>();
+    private Map<String, String> headers = new HashMap<>();
+    private Map<String, String> body = new HashMap<>();
     private Map<String, String> queryStringParameters = new HashMap<String, String>();
     private Map<String, String> pathParameters = new HashMap<String, String>();
 
-
-    public PayloadBuilder(String resource, String method, String body) {
-
-    }
 
     public PayloadBuilder(Resource resource) {
         buildGenericPayload(resource);
@@ -24,6 +23,24 @@ public class PayloadBuilder {
 
     public PayloadBuilder(Resource resource, String email){
         buildGenericPayload(resource, email);
+    }
+
+    public PayloadBuilder(
+            String connectionId,
+            String routeKey,
+            Optional<Map<String, String>> body,
+            Optional<Map<String, String>> headers)
+    {
+        setRequestContext("connectionId", connectionId);
+        setRequestContext("routeKey", routeKey);
+        setRequestContext("domainName", "j1g49nfi28.execute-api.us-east-1.amazonaws.com");
+        setRequestContext("stage", "dev");
+        if (body.isPresent()) {
+            setBody(body.get());
+        }
+        if (headers.isPresent()) {
+            setHeaders(headers.get());
+        }
     }
 
     private void buildGenericPayload(Resource resource) {
@@ -48,8 +65,6 @@ public class PayloadBuilder {
                 setBody("email",email);
         }
     }
-
-
 
     public String getPayload() {
         return payload;
@@ -83,6 +98,30 @@ public class PayloadBuilder {
         this.method = method;
     }
 
+    public String getRequestContext() {
+        if (this.body == null) {
+            return "";
+        } else {
+            return mappedValuesToString(this.requestContext, false);
+        }
+    }
+
+    public void setRequestContext(String key, String value) {
+        this.requestContext.put(key, value);
+    }
+
+    public String getHeaders() {
+        if (this.body == null) {
+            return "";
+        } else {
+            return mappedValuesToString(this.headers, false);
+        }
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
     public String getBody() {
         if (this.body == null) {
             return "";
@@ -93,6 +132,10 @@ public class PayloadBuilder {
 
     public void setBody(String key, String value) {
         this.body.put(key, value);
+    }
+
+    public void setBody(Map<String, String> body) {
+        this.body = body;
     }
 
     public void setQueryStringParameters(String key, String value) {
@@ -134,6 +177,14 @@ public class PayloadBuilder {
         return parameterString;
     }
 
+    public String webSocketRequestToString() {
+        return "{"+
+                    "\"headers\": " + getHeaders() + "," +
+                    "\"requestContext\": " + getRequestContext() + "," +
+                    "\"body\": " + getBody() +
+                "}";
+    }
+
     public String toString() {
         return "{"+
                     "\"resource\": \"" + getResource() + "\"," +
@@ -141,6 +192,7 @@ public class PayloadBuilder {
                     "\"httpMethod\": \"" + getMethod() + "\"," +
                     "\"queryStringParameters\": " + getQueryStringParameters() + "," +
                     "\"pathParameters\": " + getPathParameters() + "," +
+                    "\"requestContext\": " + getRequestContext() + "," +
                     "\"body\": " + getBody() +
                 "}";
     }

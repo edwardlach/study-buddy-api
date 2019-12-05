@@ -5,6 +5,7 @@ public class RequestDTO {
     String httpMethod;
     String body;
     String path;
+    WebSocketHeadersDTO headers;
     PathParameterDTO pathParameters;
     QueryStringParametersDTO queryStringParameters;
     RequestContextDTO requestContext;
@@ -65,9 +66,24 @@ public class RequestDTO {
         this.requestContext = requestContext;
     }
 
-    public RequestDTO(String resource, String httpMethod, String body, String path,
-                      PathParameterDTO pathParameters, RequestContextDTO requestContext,
-                      QueryStringParametersDTO queryStringParameters) {
+    public WebSocketHeadersDTO getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(WebSocketHeadersDTO headers) {
+        this.headers = headers;
+    }
+
+    public RequestDTO(
+            String resource,
+            String httpMethod,
+            String body,
+            String path,
+            PathParameterDTO pathParameters,
+            RequestContextDTO requestContext,
+            QueryStringParametersDTO queryStringParameters,
+            WebSocketHeadersDTO headers)
+    {
         this.resource = resource;
         this.httpMethod = httpMethod;
         this.body = body;
@@ -75,6 +91,7 @@ public class RequestDTO {
         this.pathParameters = pathParameters;
         this.requestContext = requestContext;
         this.queryStringParameters = queryStringParameters;
+        this.headers = headers;
     }
 
     public RequestDTO() {}

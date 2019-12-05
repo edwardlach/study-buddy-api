@@ -10,8 +10,9 @@ public class ChatMessageService {
 
     private ChatMessageDAO chatMessageDAO = new ChatMessageDAO();
 
-    public int postChatMessage(ChatMessage chatMessage) throws SQLException{
-        return chatMessageDAO.insertChatMessage(chatMessage);
+    public ChatMessage postChatMessage(ChatMessage chatMessage) throws SQLException{
+        int chatId = chatMessageDAO.insertChatMessage(chatMessage);
+        return getChatMessageById(chatId);
     }
 
     public ChatMessage getChatMessageById(int chatMessageId) throws SQLException{

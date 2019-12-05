@@ -33,13 +33,12 @@ public class ChatMessageController extends AbstractController{
     }
 
     private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException{
-        int chatMessage = chatMessageService.postChatMessage(
+        ChatMessage chatMessage = chatMessageService.postChatMessage(
                 new ChatMessage(
                         chatMessageDTO.getUserId(),
                         chatMessageDTO.getGroupId(),
                         chatMessageDTO.getMessage()));
-        ChatMessage newChatMessage = chatMessageService.getChatMessageById(chatMessage);
-        return new ChatMessageDTO(newChatMessage);
+        return new ChatMessageDTO(chatMessage);
     }
 
     private List<ChatMessageDTO> getChatMessagesForGroup(int groupId) throws SQLException{

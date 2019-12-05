@@ -15,7 +15,12 @@ public class LambdaMock {
 
     public static ResponseDTO invoke(PayloadBuilder payload) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        RequestDTO request = mapper.readValue(payload.toString(), RequestDTO.class);
+        RequestDTO request;
+        if (payload.getResource() != null) {
+            request = mapper.readValue(payload.toString(), RequestDTO.class);
+        } else {
+            request = mapper.readValue(payload.webSocketRequestToString(), RequestDTO.class);
+        }
         Context context = new TestContext();
         FrontController lambda = new FrontController();
         return lambda.handleRequest(request, context);
