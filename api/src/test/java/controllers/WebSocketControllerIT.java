@@ -24,8 +24,8 @@ import static org.junit.Assert.assertTrue;
 public class WebSocketControllerIT {
 
     private static ObjectMapper mapper;
-    private static String connectionId;
     private static String message;
+    private static String connectionId;
     private static String server;
     private static Map<String, String> body = new HashMap<>();
     private static Map<String, String> headers = new HashMap<>();
@@ -33,8 +33,8 @@ public class WebSocketControllerIT {
     @BeforeClass
     public static void setUp() {
         mapper = new ObjectMapper();
-        connectionId = RandomGen.getRandomConnectionId();
         server = "wss://j1g49nfi28.execute-api.us-east-1.amazonaws.com/dev";
+        connectionId = RandomGen.getRandomConnectionId();
         message = RandomGen.getRandomMessage();
         body.put("action", "sendmessage");
         body.put("message", message);
@@ -83,12 +83,6 @@ public class WebSocketControllerIT {
         assertEquals(200, response.getStatusCode());
         assertEquals(connectionId, webSocket.getConnectionId());
         assertTrue(webSocket.isDeleted());
-    }
-
-    @Test
-    public void thatConnectedClientsAreNotifiedWhenANewMessageIsReceived() {
-//        ClientManager client = ClientManager.createClient();
-//        Session session = client.connectToServer();
     }
 
 }
