@@ -25,6 +25,26 @@ public class WebSocketDAO extends DBConnect {
         return websocket.getConnectionId();
     }
 
+    public WebSocketConnection updateWebSocketConnection(WebSocketConnection webSocket) throws SQLException {
+        String sql = "UPDATE websocketConnections set updated = now(), deleted = ?, groupId = ?, userId = ? " +
+                     "WHERE connectionId = ?";
+
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setBoolean(1, webSocket.isDeleted());
+        statement.setInt(2, webSocket.getGroupId());
+        statement.setInt(3, webSocket.getUserId());
+        statement.setString(4, webSocket.getConnectionId());
+
+        boolean rowInserted = statement.executeUpdate() > 0;
+
+        statement.close();
+        disconnect();
+
+        return webSocket;
+    }
+
     public String deleteWebsocketConnection(WebSocketConnection websocket) throws SQLException {
         String sql = "UPDATE websocketConnections set deleted = true, updated = now() where " +
                 "connectionId = ?";

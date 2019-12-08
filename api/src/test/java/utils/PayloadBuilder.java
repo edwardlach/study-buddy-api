@@ -28,8 +28,7 @@ public class PayloadBuilder {
     public PayloadBuilder(
             String connectionId,
             String routeKey,
-            Optional<Map<String, String>> body,
-            Optional<Map<String, String>> headers)
+            Optional<Map<String, String>> body)
     {
         setRequestContext("connectionId", connectionId);
         setRequestContext("routeKey", routeKey);
@@ -37,9 +36,6 @@ public class PayloadBuilder {
         setRequestContext("stage", "dev");
         if (body.isPresent()) {
             setBody(body.get());
-        }
-        if (headers.isPresent()) {
-            setHeaders(headers.get());
         }
     }
 
@@ -179,7 +175,6 @@ public class PayloadBuilder {
 
     public String webSocketRequestToString() {
         return "{"+
-                    "\"headers\": " + getHeaders() + "," +
                     "\"requestContext\": " + getRequestContext() + "," +
                     "\"body\": " + getBody() +
                 "}";

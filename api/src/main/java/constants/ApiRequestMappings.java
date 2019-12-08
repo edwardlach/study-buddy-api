@@ -19,5 +19,6 @@ public class ApiRequestMappings {
     public static final String CONNECT = "$connect";
     public static final String DISCONNECT = "$disconnect";
     public static final String SEND_MESSAGE = "sendmessage";
+    public static final String IDENTIFY = "identify";
 
 }

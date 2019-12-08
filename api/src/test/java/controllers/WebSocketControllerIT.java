@@ -21,62 +21,96 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static constants.ApiRequestMappings.*;
+
+
 public class WebSocketControllerIT {
 
     private static ObjectMapper mapper;
     private static String message;
-    private static String connectionId;
     private static String server;
-    private static Map<String, String> body = new HashMap<>();
-    private static Map<String, String> headers = new HashMap<>();
+    private static int userId = 40;
+    private static int groupId = 24;
 
     @BeforeClass
     public static void setUp() {
         mapper = new ObjectMapper();
         server = "wss://j1g49nfi28.execute-api.us-east-1.amazonaws.com/dev";
-        connectionId = RandomGen.getRandomConnectionId();
         message = RandomGen.getRandomMessage();
-        body.put("action", "sendmessage");
-        body.put("message", message);
-        body.put("userId", "40");
-        body.put("groupId", "24");
-        headers.put("userId", "40");
-        headers.put("groupId", "24");
     }
 
     @Test
     public void thatAWebSocketConnectionIsSaved() throws IOException {
+        String connectionId = createConnection();
+        deleteConnection(connectionId);
+    }
+
+    @Test
+    public void thatAWeSocketConnectionIsUpdatedWithMessageIdentity() throws IOException {
+        String connectionId = createConnection();
+        Map<String, String> body = new HashMap<>();
+        body.put("action", IDENTIFY);
+        body.put("userId", Integer.toString(userId));
+        body.put("groupId", Integer.toString(groupId));
+        PayloadBuilder payload = new PayloadBuilder(
+                connectionId,
+                IDENTIFY,
+                Optional.of(body));
+        ResponseDTO response = LambdaMock.invoke(payload);
+        WebSocketDTO webSocket = mapper.readValue(response.getBody(), WebSocketDTO.class);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(connectionId, webSocket.getConnectionId());
+        assertEquals(userId, webSocket.getUserId());
+        assertEquals(groupId, webSocket.getGroupId());
+        deleteConnection(connectionId);
+    }
+
+    @Test
+    public void thatAWebSocketCreatesANewMessage() throws IOException {
+        String connectionId = createConnection();
+        Map<String, String> body = new HashMap<>();
+        body.put("action", SEND_MESSAGE);
+        body.put("message", message);
+        body.put("userId", Integer.toString(userId));
+        body.put("groupId", Integer.toString(groupId));
         PayloadBuilder payload = new PayloadBuilder(
             connectionId,
-            "$connect",
-            Optional.empty(),
-            Optional.of(headers));
+            SEND_MESSAGE,
+            Optional.of(body));
+        ResponseDTO response = LambdaMock.invoke(payload);
+        ChatMessageDTO chatMessage = mapper.readValue(response.getBody(), ChatMessageDTO.class);
+        assertEquals(200, response.getStatusCode());
+        assertEquals(message, chatMessage.getMessage());
+        deleteConnection(connectionId);
+    }
+
+    @Test
+    public void thatAWebSocketConnectionIsDeleted() throws IOException {
+        String connectionId = createConnection();
+        deleteConnection(connectionId);
+    }
+
+
+    /*************************** Helpers ***************************/
+
+    private String createConnection() throws IOException {
+        String connectionId = RandomGen.getRandomConnectionId();
+        PayloadBuilder payload = new PayloadBuilder(
+                connectionId,
+                CONNECT,
+                Optional.empty());
         ResponseDTO response = LambdaMock.invoke(payload);
         WebSocketDTO webSocket = mapper.readValue(response.getBody(), WebSocketDTO.class);
         assertEquals(200, response.getStatusCode());
         assertEquals(connectionId, webSocket.getConnectionId());
         assertTrue(!webSocket.isDeleted());
+        return connectionId;
     }
 
-    @Test
-    public void thatAWebSocketCreatesANewMessage() throws IOException {
-        PayloadBuilder payload = new PayloadBuilder(
-            connectionId,
-            "sendmessage",
-            Optional.of(body),
-            Optional.empty());
-        ResponseDTO response = LambdaMock.invoke(payload);
-        ChatMessageDTO chatMessage = mapper.readValue(response.getBody(), ChatMessageDTO.class);
-        assertEquals(200, response.getStatusCode());
-        assertEquals(message, chatMessage.getMessage());
-    }
-
-    @Test
-    public void thatAWebSocketConnectionIsDeleted() throws IOException {
+    private void deleteConnection(String connectionId) throws IOException {
         PayloadBuilder payload = new PayloadBuilder(
                 connectionId,
-                "$disconnect",
-                Optional.empty(),
+                DISCONNECT,
                 Optional.empty());
         ResponseDTO response = LambdaMock.invoke(payload);
         WebSocketDTO webSocket = mapper.readValue(response.getBody(), WebSocketDTO.class);
@@ -84,5 +118,4 @@ public class WebSocketControllerIT {
         assertEquals(connectionId, webSocket.getConnectionId());
         assertTrue(webSocket.isDeleted());
     }
-
 }

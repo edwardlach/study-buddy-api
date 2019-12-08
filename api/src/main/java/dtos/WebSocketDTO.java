@@ -31,12 +31,12 @@ public class WebSocketDTO extends AbstractDTO {
 
     public WebSocketDTO(
             RequestContextDTO requestContext,
-            WebSocketHeadersDTO headers)
+            MessageIdentityDTO messageIdentity)
     {
         this.requestContext = requestContext;
         this.connectionId = requestContext.getConnectionId();
-        this.userId = headers.getUserId();
-        this.groupId = headers.getGroupId();
+        this.userId = messageIdentity.getUserId();
+        this.groupId = messageIdentity.getGroupId();
     }
 
     public WebSocketDTO(

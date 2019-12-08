@@ -1,10 +1,7 @@
 package controllers;
 
 import com.amazonaws.http.HttpMethodName;
-import dtos.ChatMessageDTO;
-import dtos.RequestContextDTO;
-import dtos.RequestDTO;
-import dtos.WebSocketDTO;
+import dtos.*;
 import models.ChatMessage;
 import models.WebSocketConnection;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,12 +32,22 @@ public class WebSocketController extends AbstractController {
         WebSocketDTO webSocket;
         switch(request.getRequestContext().getRouteKey()) {
             case CONNECT:
-                webSocket = new WebSocketDTO(requestContext, request.getHeaders());
+                webSocket = new WebSocketDTO(requestContext);
                 setResponseBody(saveWebSocketConnection(webSocket));
                 break;
             case DISCONNECT:
                 webSocket = new WebSocketDTO(requestContext);
                 setResponseBody(deleteWebSocketConnection(webSocket));
+                break;
+            case IDENTIFY:
+                MessageIdentityDTO messageIdentity = stringToDTO(request.getBody(), MessageIdentityDTO.class);
+                webSocket = new WebSocketDTO(requestContext, messageIdentity);
+                setResponseBody(
+                        updateWebSocketConnection(
+                            webSocket.getUserId(),
+                            webSocket.getGroupId(),
+                            webSocket.getConnectionId()
+                ));
                 break;
             case SEND_MESSAGE:
                 ChatMessageDTO chatMessageDTO = stringToDTO(request.getBody(), ChatMessageDTO.class);
@@ -57,8 +64,6 @@ public class WebSocketController extends AbstractController {
     private WebSocketDTO saveWebSocketConnection(WebSocketDTO webSocket) throws SQLException {
         WebSocketConnection websocketConnection = new WebSocketConnection();
         websocketConnection.setConnectionId(webSocket.getConnectionId());
-        websocketConnection.setUserId(webSocket.getUserId());
-        websocketConnection.setGroupId((webSocket.getGroupId()));
         return new WebSocketDTO(webSocketService.saveWebsocketConnection(websocketConnection));
     }
 
@@ -66,6 +71,10 @@ public class WebSocketController extends AbstractController {
         WebSocketConnection websocketConnection = new WebSocketConnection();
         websocketConnection.setConnectionId(webSocket.getConnectionId());
         return new WebSocketDTO(webSocketService.deleteWebsocketConnection(websocketConnection));
+    }
+
+    private WebSocketDTO updateWebSocketConnection(int userId, int groupId, String connectionId) throws SQLException {
+        return new WebSocketDTO((webSocketService.updateWebSocketConnection(userId, groupId, connectionId)));
     }
 
     private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException {
