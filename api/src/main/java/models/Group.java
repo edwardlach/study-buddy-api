@@ -12,6 +12,7 @@ public class Group extends GenericEntity {
     private String groupName;
     private int classId;
     private int groupId;
+    private Subject subject;
 
     public Group(){}
 
@@ -111,4 +112,11 @@ public class Group extends GenericEntity {
         this.groupId = groupId;
     }
 
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
 }

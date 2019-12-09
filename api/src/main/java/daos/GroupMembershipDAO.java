@@ -18,8 +18,6 @@ public class GroupMembershipDAO extends DBConnect {
         statement.setInt(1, groupMembership.getGroupId());
         statement.setInt(2, groupMembership.getUserId());
 
-        System.out.println(sql);
-
         boolean rowInserted = statement.executeUpdate() > 0;
         int groupMembershipId = 0;
         ResultSet result = statement.getGeneratedKeys();

@@ -21,8 +21,6 @@ public class GroupDAO extends DBConnect {
         statement.setTimestamp(3, Timestamp.valueOf(group.getStartDate()));
         statement.setTimestamp(4, Timestamp.valueOf(group.getEndDate()));
 
-        System.out.println(sql);
-
         boolean rowInserted = statement.executeUpdate() > 0;
         int groupId = 0;
         ResultSet result = statement.getGeneratedKeys();
@@ -56,7 +54,6 @@ public class GroupDAO extends DBConnect {
             group.setGroupId(result.getInt("groupId"));
             group.setStartDate(new Timestamp(result.getDate("startDate").getTime()).toLocalDateTime());
             group.setEndDate(new Timestamp(result.getDate("endDate").getTime()).toLocalDateTime());
-            System.out.println(result.getString("name"));
             groups.add(group);
             ++count;
         }
@@ -92,7 +89,6 @@ public class GroupDAO extends DBConnect {
             group.setGroupId(result.getInt("groupId"));
             group.setStartDate(new Timestamp(result.getDate("startDate").getTime()).toLocalDateTime());
             group.setEndDate(new Timestamp(result.getDate("endDate").getTime()).toLocalDateTime());
-            System.out.println(result.getString("name"));
             groups.add(group);
             ++count;
         }

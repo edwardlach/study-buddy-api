@@ -21,8 +21,6 @@ public class UserDAO extends DBConnect {
         "universityId) VALUES (now(), now(), ?, ?, ?, ?, ?, ?)";
         connect();
 
-        System.out.println(sql);
-
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
         statement.setBoolean(1, user.isDeleted());
         statement.setString(2, user.getFirstName());

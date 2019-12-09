@@ -33,6 +33,9 @@ public class GroupDTO extends AbstractDTO {
         this.groupName = group.getGroupName();
         this.classId = group.getClassId();
         this.groupId = group.getGroupId();
+        if (group.getSubject() != null) {
+            this.subject = new SubjectDTO(group.getSubject());
+        }
     }
 
     public GroupDTO(

@@ -18,6 +18,7 @@ public class GroupMembershipDTO extends AbstractDTO {
     private int groupId;
     private int groupMembership;
     private UserDTO user;
+    private GroupDTO group;
 
     public GroupMembershipDTO(){}
 
@@ -29,9 +30,12 @@ public class GroupMembershipDTO extends AbstractDTO {
         this.userId = groupMembership.getUserId();
         this.groupId = groupMembership.getGroupId();
         this.groupMembership = groupMembership.getGroupMembership();
+        if (groupMembership.getGroup() != null) {
+            this.group = new GroupDTO(groupMembership.getGroup());
+        }
     }
 
-    public GroupMembershipDTO(GroupMembership groupMembership, User user){
+    public GroupMembershipDTO(GroupMembership groupMembership, Group group){
         this.created = groupMembership.getCreated().format(formatter);
         this.updated = groupMembership.getUpdated().format(formatter);
         this.deleted = groupMembership.isDeleted();
@@ -39,7 +43,7 @@ public class GroupMembershipDTO extends AbstractDTO {
         this.userId = groupMembership.getUserId();
         this.groupId = groupMembership.getGroupId();
         this.groupMembership = groupMembership.getGroupMembership();
-        this.user = new UserDTO(user);
+        this.group = new GroupDTO(group);
     }
 
     public String getCreated() {
@@ -104,6 +108,14 @@ public class GroupMembershipDTO extends AbstractDTO {
 
     public void setUser(UserDTO user) {
         this.user = user;
+    }
+
+    public GroupDTO getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupDTO group) {
+        this.group = group;
     }
 
 }

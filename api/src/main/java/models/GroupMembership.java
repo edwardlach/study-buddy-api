@@ -11,6 +11,7 @@ public class GroupMembership extends GenericEntity {
     private int userId;
     private int groupId;
     private int groupMembership;
+    private Group group;
 
     public GroupMembership(){}
 
@@ -90,5 +91,13 @@ public class GroupMembership extends GenericEntity {
 
     public void setGroupMembership(int groupMembership) {
         this.groupMembership = groupMembership;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }
