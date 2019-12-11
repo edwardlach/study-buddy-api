@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.RequestDTO;
 import dtos.ResponseDTO;
 import models.ErrorMessage;
@@ -82,6 +83,7 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
     public ResponseDTO handleRequest(RequestDTO request, Context context) {
         String responseBody = "";
         int statusCode;
+        ObjectMapper mapper = new ObjectMapper();
         try {
             responseBody = routeRequestToController(request);
             statusCode = SUCCESS;
@@ -103,7 +105,14 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
             statusCode = INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseDTO(statusCode, responseBody);
+        ResponseDTO response = new ResponseDTO(statusCode, responseBody);
+        try {
+            System.out.println(mapper.writeValueAsString(request));
+            System.out.println(mapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 }
