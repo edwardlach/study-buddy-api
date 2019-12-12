@@ -30,6 +30,18 @@ public class GroupMembershipDAO extends DBConnect {
         return groupMembershipId;
     }
 
+    public void removeGroupMembership(int groupMembership) throws SQLException{
+        String sql = "UPDATE groupMemberships set deleted = ? where groupMembership = ?";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setBoolean(1, Boolean.parseBoolean("true"));
+        statement.setInt(2, groupMembership);
+        ResultSet result = statement.executeQuery();
+
+        disconnect();
+    }
+
     public GroupMembership getGroupMembershipById(int groupMembership) throws SQLException {
         String sql = "SELECT * FROM groupMemberships where groupMembership = ?";
         connect();
@@ -112,10 +124,17 @@ public class GroupMembershipDAO extends DBConnect {
             throw new SQLException("No groupMemberships found for user");
         }
 
+        List<GroupMembership> activeMemberships = new ArrayList<>();
+        for (GroupMembership g:groupMemberships){
+            if (g.isDeleted() == false){
+                activeMemberships.add(g);
+            }
+        }
+
         result.close();
         disconnect();
 
-        return groupMemberships;
+        return activeMemberships;
     }
 
     public List<GroupMembership> getGroupMembershipsByUserId(int userId) throws SQLException {
@@ -146,9 +165,16 @@ public class GroupMembershipDAO extends DBConnect {
             throw new SQLException("No groupMemberships found for user");
         }
 
+        List<GroupMembership> activeMemberships = new ArrayList<>();
+        for (GroupMembership g:groupMemberships){
+            if (g.isDeleted() == false){
+                activeMemberships.add(g);
+            }
+        }
+
         result.close();
         disconnect();
 
-        return groupMemberships;
+        return activeMemberships;
     }
 }
