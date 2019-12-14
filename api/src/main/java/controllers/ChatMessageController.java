@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dtos.*;
 
 import models.*;
@@ -32,7 +33,7 @@ public class ChatMessageController extends AbstractController{
         }
     }
 
-    private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException{
+    private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException, JsonProcessingException {
         ChatMessage chatMessage = chatMessageService.postChatMessage(
                 new ChatMessage(
                         chatMessageDTO.getUserId(),
@@ -41,7 +42,7 @@ public class ChatMessageController extends AbstractController{
         return new ChatMessageDTO(chatMessage);
     }
 
-    private List<ChatMessageDTO> getChatMessagesForGroup(int groupId) throws SQLException{
+    private List<ChatMessageDTO> getChatMessagesForGroup(int groupId) throws SQLException, JsonProcessingException {
         List<ChatMessageDTO> dto = new ArrayList<>();
         List<ChatMessage> messages = chatMessageService.getChatMessagesByGroupId(groupId);
         for (ChatMessage cm : messages) {

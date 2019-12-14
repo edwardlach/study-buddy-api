@@ -1,6 +1,7 @@
 package controllers;
 
 import com.amazonaws.http.HttpMethodName;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dtos.*;
 import models.ChatMessage;
 import models.WebSocketConnection;
@@ -77,7 +78,7 @@ public class WebSocketController extends AbstractController {
         return new WebSocketDTO((webSocketService.updateWebSocketConnection(userId, groupId, connectionId)));
     }
 
-    private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException {
+    private ChatMessageDTO createNewChatMessage(ChatMessageDTO chatMessageDTO) throws SQLException, JsonProcessingException {
         ChatMessage chatMessage = chatMessageService.postChatMessage(
                 new ChatMessage(
                         chatMessageDTO.getUserId(),

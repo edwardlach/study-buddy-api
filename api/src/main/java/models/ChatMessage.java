@@ -11,6 +11,7 @@ public class ChatMessage extends GenericEntity{
     private int groupId;
     private String message;
     private int messageId;
+    private User user;
 
     public ChatMessage(LocalDateTime created, LocalDateTime updated, Boolean deleted, int userId,
                        Boolean flagged, int groupId){
@@ -104,5 +105,13 @@ public class ChatMessage extends GenericEntity{
 
     public void setMessageId(int messageId) {
         this.messageId = messageId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

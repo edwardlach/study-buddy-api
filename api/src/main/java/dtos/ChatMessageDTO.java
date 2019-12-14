@@ -21,6 +21,9 @@ public class ChatMessageDTO extends AbstractDTO {
         this.groupId = chatMessage.getGroupId();
         this.messageId = chatMessage.getMessageId();
         this.message = chatMessage.getMessage();
+        if (chatMessage.getUser() != null) {
+            this.user = new UserDTO(chatMessage.getUser());
+        }
     }
 
     public ChatMessageDTO(ChatMessage chatMessage, User user){

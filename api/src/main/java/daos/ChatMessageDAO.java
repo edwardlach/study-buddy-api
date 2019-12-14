@@ -1,6 +1,8 @@
 package daos;
 
 import models.ChatMessage;
+import models.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,19 @@ public class ChatMessageDAO extends DBConnect {
     }
 
     public List<ChatMessage> getChatMessagesByGroupId(int groupId) throws SQLException {
-        String sql = "SELECT * from messages where groupId = ?";
+        String sql = "SELECT messages.*," +
+                     "users.userId, " +
+                     "users.created as userCreated, " +
+                     "users.updated as userUpdated, " +
+                     "users.deleted as userDeleted, " +
+                     "users.firstName, " +
+                     "users.lastName, " +
+                     "users.email, " +
+                     "users.educationLevel, "  +
+                     "users.universityId " +
+                     "FROM messages " +
+                     "JOIN users on users.userId = messages.userId " +
+                     "WHERE messages.groupId = ?";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -70,6 +84,7 @@ public class ChatMessageDAO extends DBConnect {
         int count = 0;
         while (result.next()) {
             ChatMessage chatMessage = new ChatMessage();
+            User user = new User();
             chatMessage.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
             chatMessage.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
             chatMessage.setDeleted(result.getBoolean("deleted"));
@@ -78,6 +93,18 @@ public class ChatMessageDAO extends DBConnect {
             chatMessage.setGroupId(result.getInt("groupId"));
             chatMessage.setMessage(result.getString("message"));
             chatMessage.setMessageId(result.getInt("messageId"));
+
+            user.setEducationLevel(result.getInt("educationLevel"));
+            user.setUniversityId((result.getInt("universityId")));
+            user.setCreated(new Timestamp(result.getDate("userCreated").getTime()).toLocalDateTime());
+            user.setUpdated(new Timestamp(result.getDate("userUpdated").getTime()).toLocalDateTime());
+            user.setDeleted(result.getBoolean("userDeleted"));
+            user.setFirstName(result.getString("firstName"));
+            user.setLastName(result.getString("lastName"));
+            user.setEmail(result.getString("email"));
+            user.setUserId(result.getInt("userId"));
+
+            chatMessage.setUser(user);
             chatMessages.add(chatMessage);
             count++;
         }
