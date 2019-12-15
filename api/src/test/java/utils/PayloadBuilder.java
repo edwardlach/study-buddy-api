@@ -32,7 +32,7 @@ public class PayloadBuilder {
     {
         setRequestContext("connectionId", connectionId);
         setRequestContext("routeKey", routeKey);
-        setRequestContext("domainName", "j1g49nfi28.execute-api.us-east-1.amazonaws.com");
+        setRequestContext("domainName", "0xj242xk57.execute-api.us-east-2.amazonaws.com");
         setRequestContext("stage", "dev");
         if (body.isPresent()) {
             setBody(body.get());

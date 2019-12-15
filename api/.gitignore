@@ -1,2 +1,7 @@
 .gradle/*
 build/*
+api.*
+gradle/*
+gradlew
+gradlew.bat
+runtime.properties

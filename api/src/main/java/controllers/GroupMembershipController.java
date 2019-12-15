@@ -12,15 +12,12 @@ import java.util.List;
 
 import static constants.ApiRequestMappings.GET;
 import static constants.ApiRequestMappings.POST;
+import static constants.ApiRequestMappings.PUT;
 import static java.util.stream.Collectors.toList;
 
 public class GroupMembershipController extends AbstractController{
 
     private GroupMembershipService groupMembershipService = new GroupMembershipService();
-    private GroupService groupService = new GroupService();
-    private UserService userService = new UserService();
-    private SubjectService subjectService = new SubjectService();
-    private UniversityService universityService = new UniversityService();
 
     public GroupMembershipController(RequestDTO request) throws IOException, SQLException{
         routeRequest(request);
@@ -31,6 +28,13 @@ public class GroupMembershipController extends AbstractController{
             case POST:
                 GroupMembershipDTO dto = stringToDTO(request.getBody(), GroupMembershipDTO.class);
                 setResponseBody(createNewGroupMembership(dto));
+                break;
+            case PUT:
+                setResponseBody(
+                        removeGroupMembership(
+                                Integer.parseInt(request.getPathParameters().getGroupMembership())
+                        )
+                );
                 break;
             case GET:
                 setResponseBody(getGroupMembershipsForUser(Integer.parseInt(request.getPathParameters().getUserId())));
@@ -44,6 +48,10 @@ public class GroupMembershipController extends AbstractController{
                         groupMembershipDTO.getGroupId(),
                         groupMembershipDTO.getUserId()));
         return new GroupMembershipDTO(groupMembership);
+    }
+
+    private String removeGroupMembership(int groupMembership) throws SQLException {
+        return groupMembershipService.removeGroupMembership(groupMembership);
     }
 
     private List<GroupDTO> getGroupMembershipsForUser(int userId) throws SQLException {

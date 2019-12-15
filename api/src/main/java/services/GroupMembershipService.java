@@ -38,6 +38,19 @@ public class GroupMembershipService {
         return newMembership;
     }
 
+    public String removeGroupMembership(int groupMembership) throws SQLException {
+        GroupMembership membership = getGroupMembershipById(groupMembership);
+        if (membership.isDeleted()) {
+            throw new SQLException("Membership is already deleted!");
+        }
+        boolean updated = groupMembershipDAO.removeGroupMembership(membership);
+        if (updated) {
+            return "GroupMembership " + groupMembership + " has been successfully removed!";
+        } else {
+            return "GroupMembership " + groupMembership + " was not able to be removed.";
+        }
+    }
+
     public GroupMembership getGroupMembershipById(int groupMembership) throws SQLException {
         return groupMembershipDAO.getGroupMembershipById(groupMembership);
     }

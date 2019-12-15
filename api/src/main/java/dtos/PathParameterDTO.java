@@ -3,10 +3,16 @@ package dtos;
 public class PathParameterDTO {
     String userId;
     String groupId;
+    String groupMembership;
 
-    public PathParameterDTO(String userId, String groupId) {
+    public PathParameterDTO(
+            String userId,
+            String groupId,
+            String groupMembership)
+    {
         this.userId = userId;
         this.groupId = groupId;
+        this.groupMembership = groupMembership;
     }
 
     public PathParameterDTO(){}
@@ -28,4 +34,11 @@ public class PathParameterDTO {
         this.groupId = groupId;
     }
 
+    public String getGroupMembership() {
+        return groupMembership;
+    }
+
+    public void setGroupMembership(String groupMembership) {
+        this.groupMembership = groupMembership;
+    }
 }

@@ -30,16 +30,17 @@ public class GroupMembershipDAO extends DBConnect {
         return groupMembershipId;
     }
 
-    public void removeGroupMembership(int groupMembership) throws SQLException{
-        String sql = "UPDATE groupMemberships set deleted = ? where groupMembership = ?";
+    public boolean removeGroupMembership(GroupMembership membership) throws SQLException{
+        String sql = "UPDATE groupMemberships set deleted = true where groupMembership = ?";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
-        statement.setBoolean(1, Boolean.parseBoolean("true"));
-        statement.setInt(2, groupMembership);
-        ResultSet result = statement.executeQuery();
+        statement.setInt(1, membership.getGroupMembership());
+        boolean rowUpdated = statement.executeUpdate() > 0;
 
+        statement.close();
         disconnect();
+        return rowUpdated;
     }
 
     public GroupMembership getGroupMembershipById(int groupMembership) throws SQLException {
@@ -69,7 +70,7 @@ public class GroupMembershipDAO extends DBConnect {
     }
 
     public GroupMembership getGroupMembershipByUserAndGroup(int userId, int groupId) throws SQLException {
-        String sql = "SELECT * FROM groupMemberships where userId = ? and groupId = ?";
+        String sql = "SELECT * FROM groupMemberships where userId = ? and groupId = ? and deleted = false";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -97,7 +98,7 @@ public class GroupMembershipDAO extends DBConnect {
 
 
     public List<GroupMembership> getGroupMembershipsByGroupId(int groupId) throws SQLException {
-        String sql = "SELECT * from groupMemberships where groupId = ?";
+        String sql = "SELECT * from groupMemberships where groupId = ? and deleted = false";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -121,7 +122,7 @@ public class GroupMembershipDAO extends DBConnect {
         }
 
         if (count == 0) {
-            throw new SQLException("No groupMemberships found for user");
+            throw new SQLException("No active groupMemberships found for group");
         }
 
         List<GroupMembership> activeMemberships = new ArrayList<>();
@@ -138,7 +139,7 @@ public class GroupMembershipDAO extends DBConnect {
     }
 
     public List<GroupMembership> getGroupMembershipsByUserId(int userId) throws SQLException {
-        String sql = "SELECT * from groupMemberships where userId = ?";
+        String sql = "SELECT * from groupMemberships where userId = ? and deleted = false";
         connect();
 
         PreparedStatement statement = jdbcConnection.prepareStatement(sql);
@@ -162,7 +163,7 @@ public class GroupMembershipDAO extends DBConnect {
         }
 
         if (count == 0) {
-            throw new SQLException("No groupMemberships found for user");
+            throw new SQLException("No active groupMemberships found for user");
         }
 
         List<GroupMembership> activeMemberships = new ArrayList<>();

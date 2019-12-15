@@ -109,7 +109,8 @@ public class WebSocketController extends AbstractController {
                     ChatMessageDTO.toString(chatMessageDTO)
             );
 
-            awsRequest.sendRequest();
+            CloseableHttpResponse response = awsRequest.sendRequest();
+            System.out.println(response.toString());
         }
     }
 

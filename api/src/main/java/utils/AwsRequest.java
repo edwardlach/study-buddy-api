@@ -16,7 +16,7 @@ import java.util.Map;
 public class AwsRequest {
     private String key = System.getenv("AWS_KEY");
     private String secret = System.getenv("AWS_SECRET");
-    private String regionName = "us-east-1";
+    private String regionName = "us-east-2";
     private String serviceName = "execute-api";
     private String contentType = "application/json";
     private String payload;

@@ -35,7 +35,7 @@ public class WebSocketControllerIT {
     @BeforeClass
     public static void setUp() {
         mapper = new ObjectMapper();
-        server = "wss://j1g49nfi28.execute-api.us-east-1.amazonaws.com/dev";
+        server = "wss://0xj242xk57.execute-api.us-east-2.amazonaws.com/dev";
         message = RandomGen.getRandomMessage();
     }
 
