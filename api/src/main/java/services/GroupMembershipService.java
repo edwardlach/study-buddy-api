@@ -16,17 +16,24 @@ public class GroupMembershipService {
     SubjectService subjectService = new SubjectService();
 
     public GroupMembership postGroupMembership(GroupMembership groupMembership)throws SQLException {
-        GroupMembership membership = groupMembershipDAO.getGroupMembershipByUserAndGroup(
-                groupMembership.getUserId(),
-                groupMembership.getGroupId());
-        List<GroupMembership> existingMembers = getGroupMembershipsByGroupId(groupMembership.getGroupId());
-
-        if (membership.getGroupMembership() > 0) {
-             throw new SQLException("The user has an existing membership to the group.");
+        try {
+            GroupMembership existingMembership = groupMembershipDAO.getGroupMembershipByUserAndGroup(
+                    groupMembership.getUserId(),
+                    groupMembership.getGroupId());
+            if (existingMembership.getGroupMembership() > 0) {
+                throw new SQLException("The user has an existing membership to the group.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
-        if (existingMembers.size() >= 7) {
-            throw new SQLException("The requested group is full, not new members are allowed!");
+        try {
+            List<GroupMembership> existingMembers = getGroupMembershipsByGroupId(groupMembership.getGroupId());
+            if (existingMembers.size() >= 7) {
+                throw new SQLException("The requested group is full, not new members are allowed!");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
         int newMembershipId = groupMembershipDAO.insertGroupMembership(groupMembership);

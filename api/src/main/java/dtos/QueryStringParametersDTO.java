@@ -3,14 +3,17 @@ package dtos;
 public class QueryStringParametersDTO {
     String email;
     String searchTerm;
+    int creator;
 
     public QueryStringParametersDTO(){}
 
     public QueryStringParametersDTO(
             String email,
-            String searchTerm) {
+            String searchTerm,
+            int creator) {
         this.email = email;
         this.searchTerm = searchTerm;
+        this.creator = creator;
     }
 
     public String getEmail() {
@@ -29,5 +32,12 @@ public class QueryStringParametersDTO {
         this.searchTerm = searchTerm;
     }
 
+    public int getCreator() {
+        return creator;
+    }
+
+    public void setCreator(int creator) {
+        this.creator = creator;
+    }
 }
 

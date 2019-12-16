@@ -1,9 +1,12 @@
 package controllers;
 
+import dtos.GroupMembershipDTO;
 import dtos.RequestDTO;
 import dtos.GroupDTO;
 import models.Group;
+import models.GroupMembership;
 import models.Subject;
+import services.GroupMembershipService;
 import services.GroupService;
 import services.SubjectService;
 
@@ -20,6 +23,7 @@ import static constants.ApiRequestMappings.POST;
 public class GroupController extends AbstractController {
 
     private GroupService groupService = new GroupService();
+    private GroupMembershipService groupMembershipService = new GroupMembershipService();
     private SubjectService subjectService = new SubjectService();
 
     public GroupController(RequestDTO request) throws IOException, SQLException {
@@ -31,7 +35,7 @@ public class GroupController extends AbstractController {
         switch(request.getHttpMethod()){
             case POST:
                 GroupDTO dto = stringToDTO(request.getBody(), GroupDTO.class);
-                setResponseBody(createNewGroup(dto));
+                setResponseBody(createNewGroup(dto, request.getQueryStringParameters().getCreator()));
                 break;
             case GET:
                 System.out.println(request.getQueryStringParameters().getSearchTerm());
@@ -40,15 +44,18 @@ public class GroupController extends AbstractController {
         }
     }
 
-    private GroupDTO createNewGroup(GroupDTO groupDTO) throws SQLException{
-        int groupId = groupService.postGroup(new Group(
-            LocalDateTime.parse(groupDTO.getStartDate(), formatter),
-            LocalDateTime.parse(groupDTO.getEndDate(), formatter),
-            groupDTO.isDeleted(),
-            groupDTO.getGroupName(),
-            groupDTO.getClassId()));
-        Group group = groupService.getGroupById(groupId);
-        return new GroupDTO(group);
+    private GroupMembershipDTO createNewGroup(GroupDTO groupDTO, int userId) throws SQLException{
+        Group group = new Group(
+                LocalDateTime.parse(groupDTO.getStartDate(), formatter),
+                LocalDateTime.parse(groupDTO.getEndDate(), formatter),
+                groupDTO.isDeleted(),
+                groupDTO.getGroupName(),
+                groupDTO.getClassId());
+        int groupId = groupService.postGroup(group);
+        GroupMembership groupMembership = new GroupMembership(groupId, userId);
+        // Creates a group and then a membership for the returning users.
+        GroupMembership newMembership = groupMembershipService.postGroupMembership(groupMembership);
+        return new GroupMembershipDTO(newMembership);
     }
 
     private List<GroupDTO> getGroupsFromSearch(String groupName) throws SQLException{

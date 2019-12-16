@@ -2,6 +2,7 @@ package services;
 
 import daos.GroupDAO;
 import models.Group;
+import models.GroupMembership;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,7 +12,6 @@ public class GroupService {
     private GroupDAO groupDAO = new GroupDAO();
 
     public int postGroup(Group group) throws SQLException {
-        // TODO : validation?
         return groupDAO.insertGroup(group);
     }
 
