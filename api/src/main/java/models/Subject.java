@@ -12,6 +12,7 @@ public class Subject extends GenericEntity {
     private int universityId;
     private int classNumber;
     private String subject;
+    private University university;
 
     public Subject(){}
 
@@ -95,5 +96,13 @@ public class Subject extends GenericEntity {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public University getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
     }
 }

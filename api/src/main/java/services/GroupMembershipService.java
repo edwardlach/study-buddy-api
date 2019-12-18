@@ -1,5 +1,7 @@
 package services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import daos.GroupDAO;
 import daos.GroupMembershipDAO;
 import models.Group;
@@ -7,6 +9,7 @@ import models.GroupMembership;
 import models.Subject;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMembershipService {
@@ -68,5 +71,19 @@ public class GroupMembershipService {
 
     public List<GroupMembership> getGroupMembershipsByUserId(int userId) throws SQLException {
         return groupMembershipDAO.getGroupMembershipsByUserId(userId);
+    }
+
+    public List<Group> getUserGroupsByUserId(int userId) throws SQLException {
+        List<Group> userGroups = new ArrayList<>();
+        List<GroupMembership> userMemberships = groupMembershipDAO.getGroupMembershipsByUserId(userId);
+        ObjectMapper mapper = new ObjectMapper();
+        for(GroupMembership userMembership : userMemberships) {
+            Group userGroup = groupService.getDetailedGroupById(userMembership.getGroupId());
+            List<GroupMembership> memberships = groupMembershipDAO
+                    .getDetailedGroupMembershipsByGroupId(userMembership.getGroupId());
+            userGroup.setGroupMemberships(memberships);
+            userGroups.add(userGroup);
+        }
+        return userGroups;
     }
 }

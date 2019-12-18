@@ -27,4 +27,8 @@ public class GroupService {
         return groupDAO.getGroupById(id);
     }
 
+    public Group getDetailedGroupById(int id) throws SQLException {
+        return groupDAO.getGroupWithDetailsById(id);
+    }
+
 }

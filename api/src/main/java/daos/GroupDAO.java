@@ -1,6 +1,8 @@
 package daos;
 
 import models.Group;
+import models.Subject;
+import models.University;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
@@ -122,6 +124,59 @@ public class GroupDAO extends DBConnect {
             group.setGroupId(result.getInt("groupId"));
             group.setStartDate(new Timestamp(result.getDate("startDate").getTime()).toLocalDateTime());
             group.setEndDate(new Timestamp(result.getDate("endDate").getTime()).toLocalDateTime());
+        }
+        result.close();
+        disconnect();
+
+        return group;
+    }
+
+    public Group getGroupWithDetailsById(int id) throws SQLException {
+        String sql = "SELECT g.*, " +
+                         "s.created as subjectCreated, " +
+                         "s.updated as subjectUpdated, " +
+                         "s.deleted as subjectDeleted, " +
+                         "s.name as subjectName, " +
+                         "s.universityId, " +
+                         "s.classNumber, " +
+                         "s.subject, " +
+                         "u.name, " +
+                         "u.location " +
+                     "FROM groups g " +
+                     "JOIN classes s on s.classId = g.classId " +
+                     "JOIN universities u on u.universityId = s.universityId " +
+                     "WHERE g.groupId = ?";
+
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setInt(1, id);
+
+        ResultSet result = statement.executeQuery();
+
+        University university = new University();
+        Subject subject = new Subject();
+        Group group = new Group();
+        if (result.next()) {
+            university.setUniversityId(result.getInt("universityId"));
+            university.setName(result.getString("name"));
+            university.setLocation(result.getString("location"));
+            subject.setCreated(new Timestamp(result.getDate("subjectCreated").getTime()).toLocalDateTime());
+            subject.setUpdated(new Timestamp(result.getDate("subjectUpdated").getTime()).toLocalDateTime());
+            subject.setDeleted(result.getBoolean("subjectDeleted"));
+            subject.setName(result.getString("subjectName"));
+            subject.setUniversityId(result.getInt("universityId"));
+            subject.setClassNumber(result.getInt("classNumber"));
+            subject.setUniversity(university);
+            group.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            group.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            group.setDeleted(result.getBoolean("deleted"));
+            group.setGroupName(result.getString("name"));
+            group.setClassId(result.getInt("classId"));
+            group.setGroupId(result.getInt("groupId"));
+            group.setStartDate(new Timestamp(result.getDate("startDate").getTime()).toLocalDateTime());
+            group.setEndDate(new Timestamp(result.getDate("endDate").getTime()).toLocalDateTime());
+            group.setSubject(subject);
         }
         result.close();
         disconnect();

@@ -8,16 +8,16 @@ import services.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static constants.ApiRequestMappings.GET;
-import static constants.ApiRequestMappings.POST;
-import static constants.ApiRequestMappings.PUT;
+import static constants.ApiRequestMappings.*;
 import static java.util.stream.Collectors.toList;
 
 public class GroupMembershipController extends AbstractController{
 
     private GroupMembershipService groupMembershipService = new GroupMembershipService();
+    private UserService userService = new UserService();
 
     public GroupMembershipController(RequestDTO request) throws IOException, SQLException{
         routeRequest(request);
@@ -37,7 +37,17 @@ public class GroupMembershipController extends AbstractController{
                 );
                 break;
             case GET:
-                setResponseBody(getGroupMembershipsForUser(Integer.parseInt(request.getPathParameters().getUserId())));
+                switch(request.getResource()) {
+                    case GROUP_MEMBERSHIP:
+                        System.out.println("The call was correctly routed!");
+                        User user = userService.getUserByEmail(request.getQueryStringParameters().getEmail());
+                        System.out.println("User " + user.getUserId() + " was retrieved for email " + request.getQueryStringParameters().getEmail());
+                        setResponseBody(getGroupMembershipsForUser(user.getUserId()));
+                        break;
+                    case USER_GROUP_MEMBERSHIPS:
+                        setResponseBody(getGroupMembershipsForUser(Integer.parseInt(request.getPathParameters().getUserId())));
+                        break;
+                }
                 break;
         }
     }
@@ -55,22 +65,12 @@ public class GroupMembershipController extends AbstractController{
     }
 
     private List<GroupDTO> getGroupMembershipsForUser(int userId) throws SQLException {
-        List<GroupMembership> groupMemberships = groupMembershipService.getGroupMembershipsByUserId(userId);
-        List<GroupMembershipDTO> membershipDTOs = groupMemberships
-                .stream()
-                .map(membership -> new GroupMembershipDTO(membership))
-                .collect(toList());
-
-        return membershipDTOs
-                .stream()
-                .map(membership -> {
-                    try {
-                        return GroupDTO.buildGroupFromMembership(membership);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(toList());
+        List<Group> userGroups = groupMembershipService.getUserGroupsByUserId(userId);
+        List<GroupDTO> groupDTOs = new ArrayList<>();
+        for(Group group : userGroups) {
+            groupDTOs.add(new GroupDTO(group));
+        }
+        return groupDTOs;
     }
 
 }

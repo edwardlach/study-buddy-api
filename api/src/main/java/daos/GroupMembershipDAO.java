@@ -2,6 +2,7 @@ package daos;
 
 import models.Group;
 import models.GroupMembership;
+import models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -178,4 +179,63 @@ public class GroupMembershipDAO extends DBConnect {
 
         return activeMemberships;
     }
+
+    public List<GroupMembership> getDetailedGroupMembershipsByGroupId(int groupId) throws SQLException {
+        String sql = "SELECT u.*, " +
+                        "gm.created as membershipCreated, " +
+                        "gm.updated as membershipUpdated, " +
+                        "gm.deleted as membershipDeleted, " +
+                        "gm.active, " +
+                        "gm.groupId, " +
+                        "gm.groupMembership " +
+                     "FROM groupMemberships gm " +
+                     "JOIN users u on gm.userId = u.userId " +
+                     "WHERE gm.groupId = ? " +
+                     "AND gm.deleted = false " +
+                     "AND u.deleted = false";
+        connect();
+
+        PreparedStatement statement = jdbcConnection.prepareStatement(sql);
+        statement.setInt(1, groupId);
+
+        ResultSet result = statement.executeQuery();
+
+        List<GroupMembership> groupMemberships = new ArrayList<GroupMembership>();
+        int count = 0;
+        while (result.next()) {
+            User user = new User();
+            GroupMembership groupMembership = new GroupMembership();
+
+            user.setCreated(new Timestamp(result.getDate("created").getTime()).toLocalDateTime());
+            user.setUpdated(new Timestamp(result.getDate("updated").getTime()).toLocalDateTime());
+            user.setDeleted(result.getBoolean("deleted"));
+            user.setFirstName(result.getString("firstName"));
+            user.setLastName(result.getString("lastName"));
+            user.setEmail(result.getString("email"));
+            user.setEducationLevel(result.getInt("educationLevel"));
+            user.setUniversityId(result.getInt("universityId"));
+            user.setUserId(result.getInt("userId"));
+            groupMembership.setCreated(new Timestamp(result.getDate("membershipCreated").getTime()).toLocalDateTime());
+            groupMembership.setUpdated(new Timestamp(result.getDate("membershipUpdated").getTime()).toLocalDateTime());
+            groupMembership.setDeleted(result.getBoolean("membershipDeleted"));
+            groupMembership.setActive(result.getBoolean("active"));
+            groupMembership.setGroupId(result.getInt("groupId"));
+            groupMembership.setUserId(result.getInt("userId"));
+            groupMembership.setGroupMembership(result.getInt("groupMembership"));
+            groupMembership.setUser(user);
+
+            groupMemberships.add(groupMembership);
+            count++;
+        }
+
+        if (count == 0) {
+            throw new SQLException("No active groupMemberships found for user");
+        }
+
+        result.close();
+        disconnect();
+
+        return groupMemberships;
+    }
+
 }

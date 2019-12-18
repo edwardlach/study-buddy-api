@@ -5,6 +5,7 @@ import services.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -35,6 +36,13 @@ public class GroupDTO extends AbstractDTO {
         this.groupId = group.getGroupId();
         if (group.getSubject() != null) {
             this.subject = new SubjectDTO(group.getSubject());
+        }
+        if (group.getGroupMemberships() != null) {
+            List<GroupMembershipDTO> memberships = new ArrayList<>();
+            for (GroupMembership membership : group.getGroupMemberships()) {
+                memberships.add(new GroupMembershipDTO(membership));
+            }
+            this.groupMemberships = memberships;
         }
     }
 

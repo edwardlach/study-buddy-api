@@ -33,6 +33,9 @@ public class GroupMembershipDTO extends AbstractDTO {
         if (groupMembership.getGroup() != null) {
             this.group = new GroupDTO(groupMembership.getGroup());
         }
+        if (groupMembership.getUser() != null) {
+            this.user = new UserDTO(groupMembership.getUser());
+        }
     }
 
     public GroupMembershipDTO(GroupMembership groupMembership, Group group){

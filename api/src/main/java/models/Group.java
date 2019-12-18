@@ -1,6 +1,7 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Group extends GenericEntity {
 
@@ -13,6 +14,7 @@ public class Group extends GenericEntity {
     private int classId;
     private int groupId;
     private Subject subject;
+    private List<GroupMembership> groupMemberships;
 
     public Group(){}
 
@@ -118,5 +120,13 @@ public class Group extends GenericEntity {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public List<GroupMembership> getGroupMemberships() {
+        return groupMemberships;
+    }
+
+    public void setGroupMemberships(List<GroupMembership> groupMemberships) {
+        this.groupMemberships = groupMemberships;
     }
 }

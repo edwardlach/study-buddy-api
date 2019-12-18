@@ -82,6 +82,7 @@ public class FrontController implements RequestHandler<RequestDTO, ResponseDTO> 
     }
 
     public ResponseDTO handleRequest(RequestDTO request, Context context) {
+        System.out.println("Did this get called at least?");
         String responseBody = "";
         int statusCode;
         ObjectMapper mapper = new ObjectMapper();

@@ -26,6 +26,9 @@ public class SubjectDTO extends AbstractDTO {
         this.universityId = subjectEntity.getUniversityId();
         this.classNumber = subjectEntity.getClassNumber();
         this.subject = subjectEntity.getSubject();
+        if (subjectEntity.getUniversity() != null) {
+            this.university = new UniversityDTO(subjectEntity.getUniversity());
+        }
     }
 
     public int getClassId() {
